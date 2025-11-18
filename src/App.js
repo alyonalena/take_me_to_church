@@ -1,9 +1,10 @@
 import './App.css'
-import { ConfigProvider, Input, Tree, Modal, Typography } from 'antd'
-import { useState, useMemo } from 'react'
+import { ConfigProvider, Input, Tree, Modal, Typography, Flex } from 'antd'
+import { useState, useMemo, useRef } from 'react'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
+import Img from '../src/img/image.jpg'
 
 const getParentKey = (key, tree) => {
   let parentKey
@@ -23,6 +24,7 @@ const getParentKey = (key, tree) => {
 function App() {
 
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const keyboard = useRef(null)
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -169,7 +171,7 @@ function App() {
           "{tab} : ΅ Й Ц У К Е Н Г Ш Щ З Х Ъ { } |",
           '{lock} Ф Ы В А П Р О Л Д Ж Э ¨ " {enter}',
           "{shift} > Я Ч С М И Т Ь Б Ю < > ? {shift}",
-          ".com @ {space}",
+          ".ru @ {space}",
       ],
   }
 
@@ -181,24 +183,38 @@ function App() {
     }
   }
 
+  const onClear = () => {
+    setSearchValue('')
+    setExpandedKeys([])
+    setAutoExpandParent(false)
+    if (keyboard.current) {
+      keyboard.current.clearInput()
+    }
+  }
+
+  const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split('\r\n')
   return (
       <ConfigProvider 
           theme={{
             token: {
                 "colorPrimary": "#2a1645",
                 "colorInfo": "#2a1645",
+                "": ""
               }
           }}
       >
           <div className="App-content">
               <header className="App-header">
-                  Добро пожаловать!
+                  Добро пожаловать!!!
               </header>
               <div className="App-main">
                   <div className="Search-bar">
                       <Input.Search
                         value={searchValue}
                         placeholder="Поиск..."
+                        allowClear={true}
+                        onClear={onClear}
+                        onChange={(e) => onChange(e.target.value)}
                       />
                   </div>
                   <div className="Tree-wrapper">
@@ -213,22 +229,35 @@ function App() {
                   </div>
               </div>
               <Modal
-                  title="Личная информация"
+                  title=""
                   visible={isModalVisible} // Use 'open' instead of 'visible' in Ant Design v5+
                   onOk={handleOk}
                   okText="Закрыть"
                   onCancel={handleCancel}
                   cancelButtonProps={{ style: { display: 'none' } }} // Hides the Cancel button
               >
-                <Typography.Title>Фамилия Имя Отчество</Typography.Title>
-                <p>Должность</p>
-                <p>Опыт работы</p>
-                <p>Информация о человеке...</p>
-                <p>Что-то о его работе</p>
+                <Flex justify="space-between" style={{ paddingBottom: 20 }}>
+                  <img
+                    draggable={false}
+                    alt="avatar"
+                    src={Img}
+                    style={{
+                        width: 200,
+                        borderRadius: 10,
+                    }}
+                  />
+                  <Flex vertical justify="start" style={{ padding: 20 }}>
+                    <Typography.Title level={2}>Фамилия Имя Отчество</Typography.Title>
+                    <Typography.Text secondary> 1897 - 1945</Typography.Text>
+                    <Typography.Title level={4}>Должность</Typography.Title>
+                  </Flex>
+                </Flex>
+                <p>{text.map(t => <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{t}</p>)}</p>
               </Modal>
               <div className="Keyboard-bar">
                   <Keyboard
                       layout={greekLayout}
+                      keyboardRef={(r) => (keyboard.current = r)} 
                       layoutName={layout}
                       onChange={onChange}
                       onKeyPress={onKeyPress}
