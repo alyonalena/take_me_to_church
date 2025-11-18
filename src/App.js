@@ -1,7 +1,6 @@
 import './App.css';
 import { Input, Tree } from 'antd'
 import { useState, useMemo } from 'react'
-import { DownOutlined, FrownFilled, FrownOutlined, UserSwitchOutlined, UserOutlined } from '@ant-design/icons'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
@@ -9,18 +8,17 @@ import "react-simple-keyboard/build/css/index.css"
 const getParentKey = (key, tree) => {
   let parentKey
   for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
+    const node = tree[i]
     if (node.children) {
       if (node.children.some((item) => item.key === key)) {
-        parentKey = node.key;
+        parentKey = node.key
       } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
+        parentKey = getParentKey(key, node.children)
       }
     }
   }
   return parentKey
-};
-console.info(dataList)
+}
 
 function App() {
   const [layout, setLayout] = useState("default")
@@ -70,8 +68,8 @@ function App() {
   const generateList = (data) => {
     for (let i = 0; i < data.length; i++) {
       const node = data[i]
-      const { key } = node
-      dataList.push({  title: key, key})
+      const { key, title } = node
+      dataList.push({ title, key})
       if (node.children) {
         generateList(node.children)
       }
@@ -79,7 +77,6 @@ function App() {
   }
   generateList(defaultData)
 
-  console.info(dataList)
   const [expandedKeys, setExpandedKeys] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [autoExpandParent, setAutoExpandParent] = useState(true)
