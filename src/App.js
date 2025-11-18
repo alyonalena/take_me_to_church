@@ -123,14 +123,15 @@ function App() {
         data.map((item) => {
           const strTitle = item.title
           const strTitleLower = item.title.toLowerCase()
-          const index = strTitle.indexOf(searchValue.toLowerCase())
+          const index = strTitleLower.indexOf(searchValue.toLowerCase())
           const beforeStr = strTitle.substring(0, index)
           const afterStr = strTitle.slice(index + searchValue.length)
+          const value = strTitle.substring(index, index + searchValue.length)
           const title =
             index > -1 ? (
               <span key={item.key}>
                 {beforeStr}
-                <span className="site-tree-search-value">{searchValue}</span>
+                <span className="site-tree-search-value">{value}</span>
                 {afterStr}
               </span>
             ) : (
