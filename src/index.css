@@ -13,7 +13,6 @@ code {
 }
 
 
-.ant-typography h2,
-.ant-typography h4 {
-  color: #1B3041
+.ant-tree {
+  background-color: rgba(255, 255, 255, 0)
 }

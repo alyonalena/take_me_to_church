@@ -6,7 +6,6 @@ body,
   overflow: hidden;
   --ant-primary-color: #d4a55e;
   --ant-bg-base: #315877;
-  background-color: #315877;
   --ant-primary-color: #315877;
   --ant-primary-color-hover: #1e3a5c;
   --ant-primary-color-active: #102a4e;
@@ -65,7 +64,7 @@ body,
   overflow-y: auto;
   min-height: 0;
   padding: 0.5rem;
-  background-color: #315877;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .Keyboard-bar {
@@ -73,7 +72,6 @@ body,
   margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid #1B3041;
-
   position: sticky;
   bottom: 0;
 }

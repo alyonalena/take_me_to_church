@@ -5,6 +5,7 @@ import { useState, useMemo, useRef } from 'react'
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 import Img from '../src/img/image.jpg'
+import BackgroundImg from '../src/img/background.jpg'
 
 const getParentKey = (key, tree) => {
   let parentKey
@@ -201,8 +202,7 @@ function App() {
 
   const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split('\r\n')
   return (
-
-        <div className="App-content">
+        <div className="App-content" style={{ backgroundImage: `url(${BackgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'right', backgroundRepeat: 'no-repeat' }}>
             <header className="App-header">
               <Typography.Title level={2} style={{ color: '#1B3041'}}>Добро пожаловать в Спассо-Парголовскую Церковь</Typography.Title>                
             </header>
@@ -219,7 +219,7 @@ function App() {
                 </div>
                 <div className="Tree-wrapper">
                     <Tree
-                      style={{ backgroundColor: '#315877'}}
+                        style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
                         showLine
                         onExpand={onExpand}
                         expandedKeys={expandedKeys}

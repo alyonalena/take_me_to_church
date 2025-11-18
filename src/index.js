@@ -30,13 +30,13 @@ root.render(
               
               // Text Colors - Dark text for light background
               colorTextBase: 'rgba(0, 0, 0, 0.85)',
-              colorText: '#F0F5FF',
+              colorText: '#D9E5ED',
               colorTextSecondary: 'rgba(0, 0, 0, 0.65)',
               colorTextTertiary: 'rgba(0, 0, 0, 0.45)',
               colorTextQuaternary: 'rgba(0, 0, 0, 0.25)',
               
               // Border Colors
-              colorBorder: '#d9d9d9',
+              colorBorder: '#D9E5ED',
               colorBorderSecondary: '#f0f0f0',
               
               // Fill Colors
@@ -86,7 +86,7 @@ root.render(
               // Input component customization
               Input: {
                 colorBgContainer: '#ECECEC',
-                colorBorder: '#d9d9d9',
+                colorBorder: '#D9E5ED',
                 colorPrimaryHover: '#315877',
                 colorPrimary: '#315877',
                 algorithm: true,
