@@ -36,6 +36,33 @@ function App() {
           title: 'Пётр', key: '0-0-3', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
         }, 
       ], 
+    },
+    
+    { 
+      title: 'Апостолы', 
+      key: '0-2', 
+      icon: <UserSwitchOutlined />, 
+      children: [ 
+        { 
+          title: 'Павел', key: '0-0-4', icon: <UserOutlined />, 
+        }, 
+        { 
+          title: 'Пётр', key: '0-0-5', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
+        }, 
+      ], 
+    }, 
+    { 
+      title: 'Апостолы', 
+      key: '0-3', 
+      icon: <UserSwitchOutlined />, 
+      children: [ 
+        { 
+          title: 'Павел', key: '0-0-6', icon: <UserOutlined />, 
+        }, 
+        { 
+          title: 'Пётр', key: '0-0-7', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
+        }, 
+      ], 
     }, 
   ]
 
@@ -71,17 +98,26 @@ function App() {
       <header className="App-header">
         Добро пожаловать!
       </header>
-      <br/>
-        <Input.Search value={input} placeholder="Поиск..." variant="filled" />
-        <br/><br/>
-      <div>
-        <Tree 
-          showIcon 
-          defaultExpandAll 
-          defaultSelectedKeys={['0-0-0']} 
-          switcherIcon={<DownOutlined />} 
-          treeData={treeData} 
-        /> 
+      <div className="App-main">
+        <div className="Search-bar">
+          <Input.Search
+            value={input}
+            placeholder="Поиск..."
+            variant="filled"
+            onChange={(e) => setInput(e.target.value)}
+          />
+        </div>
+        <div className="Tree-wrapper">
+          <Tree 
+            showIcon 
+            defaultExpandAll 
+            defaultSelectedKeys={['0-0-0']} 
+            switcherIcon={<DownOutlined />} 
+            treeData={treeData} 
+          />
+        </div>
+      </div>
+      <div className="Keyboard-bar">
         <Keyboard
           layout={greekLayout}
           layoutName={layout}

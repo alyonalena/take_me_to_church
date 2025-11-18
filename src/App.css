@@ -1,8 +1,20 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 .App {
   text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-header {
+  flex-shrink: 0;
   min-height: 10vh;
   display: flex;
   flex-direction: column;
@@ -12,11 +24,50 @@
   color: #282c34;
 }
 
-.App-content {
-  margin: 1rem;
-}
-
 .App-link {
   color: #dbc192;
+}
+
+.App-content {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  box-sizing: border-box;
+  gap: 1rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.App-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.Search-bar {
+  flex-shrink: 0;
+}
+
+.Tree-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.Keyboard-bar {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+  position: sticky;
+  bottom: 0;
 }
 
