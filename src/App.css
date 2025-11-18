@@ -4,6 +4,14 @@ body,
   height: 100%;
   margin: 0;
   overflow: hidden;
+  --ant-primary-color: #d4a55e;
+  --ant-bg-base: #315877;
+  --ant-primary-color: #315877;
+  --ant-primary-color-hover: #1e3a5c;
+  --ant-primary-color-active: #102a4e;
+  --ant-bg-base: #ffffff;
+  --ant-bg-container: #f8f9fa;
+  --ant-bg-layout: #f5f7fa;
 }
 
 .App {
@@ -15,13 +23,11 @@ body,
 
 .App-header {
   flex-shrink: 0;
-  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 3vmin);
-  color: #282c34;
 }
 
 .App-link {
@@ -50,27 +56,33 @@ body,
 
 .Search-bar {
   flex-shrink: 0;
+  padding: 0 0.5rem;
 }
 
 .Tree-wrapper {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  border: 1px solid #f0f0f0;
-  border-radius: 8px;
   padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .Keyboard-bar {
   flex-shrink: 0;
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid #e0e0e0;
-  background: #fff;
+  border-top: 1px solid #1B3041;
   position: sticky;
   bottom: 0;
 }
 
 .site-tree-search-value {
   color: #f50; 
+}
+
+:root {
+  --ant-primary-color: #d4a55e;
+  --ant-bg-base: #483221;
+  --ant-bg-container: #5c422e;
+  /* ... other variables */
 }
