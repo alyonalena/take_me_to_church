@@ -1,74 +1,138 @@
 import './App.css';
 import { Input, Tree } from 'antd'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { DownOutlined, FrownFilled, FrownOutlined, UserSwitchOutlined, UserOutlined } from '@ant-design/icons'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 
+const getParentKey = (key, tree) => {
+  let parentKey
+  for (let i = 0; i < tree.length; i++) {
+    const node = tree[i];
+    if (node.children) {
+      if (node.children.some((item) => item.key === key)) {
+        parentKey = node.key;
+      } else if (getParentKey(key, node.children)) {
+        parentKey = getParentKey(key, node.children);
+      }
+    }
+  }
+  return parentKey
+};
+console.info(dataList)
+
 function App() {
-  const [input, setInput] = useState("")
   const [layout, setLayout] = useState("default")
 
-  const treeData = [ 
+  const defaultData = [ 
     { 
-      title: 'Служители', 
-      key: '0-0', 
-      icon: <UserSwitchOutlined />, 
+      title: "Настоятели", 
+      key: '0-0',
       children: [ 
         { 
-          title: 'Иванов', key: '0-0-0', icon: <UserOutlined />, 
+          title: 'Александр', key: '0-0-0', 
         }, 
         { 
-          title: 'Петров', key: '0-0-1', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
+          title: 'Дмитрий', key: '0-0-1', 
         }, 
       ], 
     },
     { 
-      title: 'Апостолы', 
-      key: '0-1', 
-      icon: <UserSwitchOutlined />, 
+      title: "Духовенство", 
+      key: '0-1',  
       children: [ 
         { 
-          title: 'Павел', key: '0-0-2', icon: <UserOutlined />, 
+          title: 'Иван', key: '0-1-0', 
         }, 
         { 
-          title: 'Пётр', key: '0-0-3', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
+          title: 'Сергей', key: '0-1-1', 
         }, 
       ], 
     },
     
     { 
-      title: 'Апостолы', 
-      key: '0-2', 
-      icon: <UserSwitchOutlined />, 
+      title:  "Хор", 
+      key: '0-2',
       children: [ 
         { 
-          title: 'Павел', key: '0-0-4', icon: <UserOutlined />, 
+          title: 'Павел', key: '0-2-0' 
         }, 
         { 
-          title: 'Пётр', key: '0-0-5', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
-        }, 
-      ], 
-    }, 
-    { 
-      title: 'Апостолы', 
-      key: '0-3', 
-      icon: <UserSwitchOutlined />, 
-      children: [ 
-        { 
-          title: 'Павел', key: '0-0-6', icon: <UserOutlined />, 
-        }, 
-        { 
-          title: 'Пётр', key: '0-0-7', icon: ({ selected }) => (selected ? <UserOutlined /> : <UserOutlined />), 
+          title: 'Пётр', key: '0-2-1'
         }, 
       ], 
     }, 
   ]
 
+  const dataList = []
+
+  const generateList = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      const node = data[i]
+      const { key } = node
+      dataList.push({  title: key, key})
+      if (node.children) {
+        generateList(node.children)
+      }
+    }
+  }
+  generateList(defaultData)
+
+  console.info(dataList)
+  const [expandedKeys, setExpandedKeys] = useState([])
+  const [searchValue, setSearchValue] = useState('')
+  const [autoExpandParent, setAutoExpandParent] = useState(true)
+
+  const onExpand = (newExpandedKeys) => {
+    setExpandedKeys(newExpandedKeys)
+    setAutoExpandParent(false)
+  }
+
   const onChange = (input) => {
-    setInput(input)
-  };
+
+    const newExpandedKeys = dataList
+      .map((item) => {
+        if (item.title.includes(input)) {
+          return getParentKey(item.key, defaultData)
+        }
+        return null
+      })
+      .filter((item, i, self) => !!(item && self.indexOf(item) === i))
+    setExpandedKeys(newExpandedKeys)
+    setSearchValue(input)
+    setAutoExpandParent(true)
+  }
+
+  const treeData = useMemo(() => {
+    const loop = (data) =>
+      data.map((item) => {
+        const strTitle = item.title
+        const index = strTitle.indexOf(searchValue)
+        const beforeStr = strTitle.substring(0, index)
+        const afterStr = strTitle.slice(index + searchValue.length)
+        const title =
+          index > -1 ? (
+            <span key={item.key}>
+              {beforeStr}
+              <span className="site-tree-search-value">{searchValue}</span>
+              {afterStr}
+            </span>
+          ) : (
+            <span key={item.key}>{strTitle}</span>
+          )
+        if (item.children) {
+          return { title, key: item.key, children: loop(item.children) }
+        }
+
+        return {
+          title,
+          key: item.key,
+        }
+      })
+
+    return loop(defaultData)
+  }, [searchValue])
 
   const onKeyPress = (button) => {
     if (button === "{shift}" || button === "{lock}") {
@@ -101,20 +165,18 @@ function App() {
       <div className="App-main">
         <div className="Search-bar">
           <Input.Search
-            value={input}
+            value={searchValue}
             placeholder="Поиск..."
-            variant="filled"
-            onChange={(e) => setInput(e.target.value)}
           />
         </div>
         <div className="Tree-wrapper">
-          <Tree 
-            showIcon 
-            defaultExpandAll 
-            defaultSelectedKeys={['0-0-0']} 
-            switcherIcon={<DownOutlined />} 
-            treeData={treeData} 
-          />
+            <Tree
+                showLine
+                onExpand={onExpand}
+                expandedKeys={expandedKeys}
+                autoExpandParent={autoExpandParent}
+                treeData={treeData}
+            />
         </div>
       </div>
       <div className="Keyboard-bar">
@@ -126,7 +188,7 @@ function App() {
         />
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
