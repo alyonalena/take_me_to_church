@@ -204,7 +204,7 @@ function App() {
   return (
         <div className="App-content" style={{ backgroundImage: `url(${BackgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'right', backgroundRepeat: 'no-repeat' }}>
             <header className="App-header">
-              <Typography.Title level={2} style={{ color: '#1B3041'}}>Добро пожаловать в Спассо-Парголовскую Церковь</Typography.Title>                
+              <Typography.Title level={2} style={{ color: '#1B3041'}}><span/>Добро пожаловать в Спассо-Парголовскую Церковь</Typography.Title>                
             </header>
             <div className="App-main">
                 <div className="Search-bar">
