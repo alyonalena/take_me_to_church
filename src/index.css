@@ -1,6 +1,11 @@
+@font-face {
+  font-family: Drugs;
+  src: url("../public/font/Drugs.otf") format("opentype");
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -10,4 +15,60 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Ensure Ant Design Typography components use Mulish */
+.ant-typography {
+  font-family: 'Drugs', sans-serif !important;
+}
+
+.ant-typography h3,
+.ant-typography h4,
+.ant-typography h5,
+.ant-typography h6,
+.ant-typography p,
+.ant-typography span {
+  font-family: 'Drugs', sans-serif !important;
+}
+
+.ant-typography h3 {
+  font-family: 'Drugs', sans-serif !important;
+  font-weight: 300 !important;
+}
+
+.ant-card-body {
+  padding: 0 !important; 
+}
+
+.ant-tag {
+  padding-inline: 15px !important;
+ /*border-radius: 1.2em !important; */
+  color: black !important;
+}
+
+.ant-btn {
+  border-radius: 1.5em !important;
+  font-family: 'Drugs', sans-serif !important;
+  font-size: 1.2em !important;
+}
+
+
+.ant-drawer-body {
+  padding: 8px !important; 
+}
+
+.ant-alert {
+  padding: 8px !important; 
+}
+
+.ant-divider {
+  margin: 16px 0px 4px!important; 
+}
+
+.ant-alert {
+  border-radius: 1.2em !important;
+}
+
+.ant-list-item-meta-avatar {
+  padding: 8px !important;
 }
