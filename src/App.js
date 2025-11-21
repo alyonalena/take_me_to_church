@@ -31,7 +31,7 @@ function App() {
   const { data: dataSource, isLoading, isError } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
-      const response = await fetch("https://dq94-qj2m-e53n.gw-1a.dockhost.net/api/groups/", {
+      const response = await fetch("https://severely-superior-monster.cloudpub.ru/api/groups/", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -91,8 +91,9 @@ function App() {
     const generateList = (data) => {
       for (let i = 0; i < data.length; i++) {
         const node = data[i]
-        const { key, title } = node
-        list.push({ title, key})
+        console.info(node)
+        const { key, title, first_name } = node
+        list.push({ title: title || first_name, key})
         if (node.children) {
           generateList(node.children)
         }
@@ -112,7 +113,6 @@ function App() {
   }
 
   const onChange = (input) => {
-
     const newExpandedKeys = dataList
       .map((item) => {
         if (item.title.toLowerCase().includes(input.toLowerCase())) {
@@ -268,9 +268,6 @@ console.info(defaultData)
                       }}
                   />
                   <Flex vertical justify="start" style={{ padding: 20 }}>
-                      <Typography.Title level={2} style={{ color: '#1B3041'}}>Фамилия Имя Отчество</Typography.Title>
-                      <Typography.Text secondary style={{ color: '#1B3041'}}> 1897 - 1945</Typography.Text>
-                      <Typography.Title level={4} style={{ color: '#1B3041'}}>Должность</Typography.Title>
                       <Typography.Title level={2} style={{ color: '#1B3041'}}>Фамилия Имя Отчество</Typography.Title>
                       <Typography.Text secondary style={{ color: '#1B3041'}}> 1897 - 1945</Typography.Text>
                       <Typography.Title level={4} style={{ color: '#1B3041'}}>Должность</Typography.Title>
