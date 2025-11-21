@@ -4,12 +4,22 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import {  ConfigProvider, theme  } from 'antd'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+})
 
 root.render(
   <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
       <ConfigProvider 
           theme={{
             algorithm: theme.darkAlgorithm,
@@ -62,7 +72,7 @@ root.render(
               
               // Font
               fontSize: 14,
-              fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+              fontFamily: "'circle-contrast_medium', 'openSans-light', sans-serif",
               
               // Border Radius
               borderRadius: 6,
@@ -74,6 +84,7 @@ root.render(
               // Control
               controlHeight: 32,
             },
+            
             components: {
               // Button component customization
               Button: {
@@ -143,7 +154,7 @@ root.render(
       >
           <App />
       </ConfigProvider>
-    
+      </QueryClientProvider>
   </React.StrictMode>
 );
 

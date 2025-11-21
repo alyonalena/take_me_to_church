@@ -14,6 +14,19 @@ body,
   --ant-bg-layout: #f5f7fa;
 }
 
+body,
+.App,
+.App * {
+  font-family: 'Open Sans', 'openSans-light', sans-serif;
+  font-weight: 300;
+}
+
+.ant-typography.ant-typography-title,
+.ant-typography.ant-typography-title * {
+  font-family: 'circle-contrast_medium', sans-serif;
+  font-weight: 500;
+}
+
 .App {
   text-align: center;
   height: 100%;

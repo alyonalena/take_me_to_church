@@ -1,6 +1,7 @@
 import './App.css'
-import { Input, Tree, Modal, Typography, Flex } from 'antd'
+import { Input, Tree, Modal, Typography, Flex, Spin } from 'antd'
 import { useState, useMemo, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
@@ -27,6 +28,22 @@ function App() {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const keyboard = useRef(null)
 
+  const { data: dataSource, isLoading, isError } = useQuery({
+    queryKey: ['groups'],
+    queryFn: async () => {
+      const response = await fetch("https://dq94-qj2m-e53n.gw-1a.dockhost.net/api/groups/", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    },
+  }) 
+
   const showModal = () => {
     setIsModalVisible(true)
   };
@@ -43,59 +60,47 @@ function App() {
 
   const [layout, setLayout] = useState("default")
 
-  const defaultData = [ 
+  // Fallback default data in case API fails or returns unexpected format
+  const fallbackData = [ 
     { 
       title: "Настоятели", 
-      key: '0-0',
-      children: [ 
-        { 
-          title: 'Александр', key: '0-0-0', 
-        }, 
-        { 
-          title: 'Дмитрий', key: '0-0-1', 
-        }, 
-      ], 
+      key: '0'
     },
     { 
       title: "Духовенство", 
-      key: '0-1',  
-      children: [ 
-        { 
-          title: 'Иван', key: '0-1-0', 
-        }, 
-        { 
-          title: 'Сергей', key: '0-1-1', 
-        }, 
-      ], 
-    },
-    
+      key: '1'
+    },    
     { 
       title:  "Хор", 
-      key: '0-2',
-      children: [ 
-        { 
-          title: 'Павел', key: '0-2-0' 
-        }, 
-        { 
-          title: 'Пётр', key: '0-2-1'
-        }, 
-      ], 
+      key: '2',
     }, 
   ]
 
-  const dataList = []
+  // Use fetched data if available, otherwise use fallback
+  const defaultData = useMemo(() => {
+    console.info(dataSource)
+    if (dataSource?.results && Array.isArray(dataSource.results) && dataSource.results.length > 0) {
+      console.info(dataSource.results)
+      return dataSource.results
+    }
+    return fallbackData
+  }, [dataSource])
 
-  const generateList = (data) => {
-    for (let i = 0; i < data.length; i++) {
-      const node = data[i]
-      const { key, title } = node
-      dataList.push({ title, key})
-      if (node.children) {
-        generateList(node.children)
+  const dataList = useMemo(() => {
+    const list = []
+    const generateList = (data) => {
+      for (let i = 0; i < data.length; i++) {
+        const node = data[i]
+        const { key, title } = node
+        list.push({ title, key})
+        if (node.children) {
+          generateList(node.children)
+        }
       }
     }
-  }
-  generateList(defaultData)
+    generateList(defaultData)
+    return list
+  }, [defaultData])
 
   const [expandedKeys, setExpandedKeys] = useState([])
   const [searchValue, setSearchValue] = useState('')
@@ -156,7 +161,7 @@ function App() {
             key: item.key,
           }
       })
-
+console.info(defaultData)
     return loop(defaultData)
   }, [searchValue])
 
@@ -218,15 +223,23 @@ function App() {
                     />
                 </div>
                 <div className="Tree-wrapper">
-                    <Tree
-                        style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
-                        showLine
-                        onExpand={onExpand}
-                        expandedKeys={expandedKeys}
-                        autoExpandParent={autoExpandParent}
-                        treeData={treeData}
-                        onSelect={(id, item) => onTreeSelect(item)}
-                    />
+                    {isLoading ? (
+                      <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
+                    ) : isError ? (
+                      <Typography.Text type="danger" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                        Ошибка загрузки данных. Используются данные по умолчанию.
+                      </Typography.Text>
+                    ) : (
+                      <Tree
+                          style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+                          showLine
+                          onExpand={onExpand}
+                          expandedKeys={expandedKeys}
+                          autoExpandParent={autoExpandParent}
+                          treeData={treeData}
+                          onSelect={(id, item) => onTreeSelect(item)}
+                      />
+                    )}
                 </div>
             </div>
             <Modal
