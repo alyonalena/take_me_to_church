@@ -96,6 +96,31 @@ body,
   color: #f50; 
 }
 
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(80vh - 200px);
+  padding-right: 8px;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 :root {
   --ant-primary-color: #d4a55e;
   --ant-bg-base: #483221;

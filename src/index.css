@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'circle-contrast_medium';
-  src: url('https://fonts.cdnfonts.com/s/7536/Circle-Contrast-Medium.woff') format('woff');
+  src: url('./fonts/circe-contrast_medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;

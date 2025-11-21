@@ -72,7 +72,6 @@ root.render(
               
               // Font
               fontSize: 14,
-              fontFamily: "'circle-contrast_medium', 'openSans-light', sans-serif",
               
               // Border Radius
               borderRadius: 6,

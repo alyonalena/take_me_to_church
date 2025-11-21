@@ -212,11 +212,18 @@ console.info(defaultData)
     }
   }
 
-  const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\r\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\r\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split('\r\n')
+  const testText = "В настоящее время идет процесс канонизации протоиерея Стефана Черняева и причисления его к лику Новомучеников и Исповедников Церкви Русской.\r\nСтефан Иванович родился 24 января 1886 года в городе Пскове в многодетной крестьянской семье. В 1906 году Стефан со своим старшим братом окончил Псковскую Духовную семинарию, после чего приехал в Петербург.\r\nЗдесь он успешно окончил Духовную Академию и Императорский Петроградский Археологический институт. Вскоре Стефан Иванович женился на дочери потомственного почетного гражданина Антонине Федоровне Никифоровой. У них было четверо детей: два мальчика и две девочки.\r\nС 1910 по 1913 год он нес послушание псаломщика в Успенской церкви на Сенной площади. В августе 1913 года его рукоположили во диакона и перевели в Спасо Бочаринский храм. 19 июня 1916 года в Свято-Троицком соборе Александро-Невской лавры отец Стефан принял священнический сан. Через год его перевели в церковь святых апостолов Петра и Павла, где позднее назначили настоятелем.\r\nС приходом советской власти на Церковь обрушились гонения, которые не обошли стороной и отца Стефана. Чтобы прокормить семью, батюшка, не оставляя священнического служения, вынужден был подрабатывать на железной дороге. В 1922 году в церкви произошел обновленческий раскол, в результате которого большая часть городских храмов присоединилась к раскольникам. Несмотря на это, отец Стефан сохранил верность законной Патриаршей церкви. Ни он, ни храмы, в которых он был настоятелем, никогда не были связаны с обновленцами.\r\n25 августа 1930 года батюшку арестовали по надуманному обвинению в хранении мелкой серебряной монеты. В этой ситуации отец Стефан повел себя как настоящий христианин. Та малая сумма, за которую его обвиняли, принадлежала не ему, а его соседке. Батюшка скрыл этот факт от следствия и взял вину на себя. Тем самым он спас пожилую женщину от тюрьмы, проведя вместо нее в заключении несколько месяцев.\r\nНужно отметить, что отец Стефан был очень мужественным человеком, что проявлялось неоднократно. Например, он не побоялся организовать материальную помощь опальным ссыльным священникам, за что сам оказался под надзором у органов.\r\nНа него неоднократно поступали доносы, в которых он обвинялся в антисоветской настроенности. Из этих доносов можно увидеть, каким на самом деле был отец Стефан. Например, в одном из них секретный агент, будучи врагом церкви, дает характеристику батюшке: «Черняев – добрый, миролюбивый, отзывчивый, хороший проповедник, не ищет славы, положения и чести…».\r\nВ августе 1935 года советские власти закрыли Петропавловскую церковь, где служил батюшка. Вскоре по решению священноначалия его перевели настоятелем в Спасо-Парголовский храм. Отец Стефан и здесь пользовался большим доверием и любовью прихожан, что не могло нравиться советской власти. На батюшку продолжали поступать различные доносы, и вскоре на него сформировалось большое досье.\r\nС началом «Большого террора» отца Стефана арестовали одним из первых. 9 октября 1937 года его заключили в тюрьму на Арсенальной набережной. На допросах следователь склонял его к предательству ближних.".split('\r\n')
   return (
-        <div className="App-content" style={{ backgroundImage: `url(${BackgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'right', backgroundRepeat: 'no-repeat' }}>
+        <div className="App-content" style={{ backgroundImage: `url(${BackgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'top right', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
             <header className="App-header">
-              <Typography.Title level={2} style={{ color: '#1B3041'}}><span/>Добро пожаловать в Спассо-Парголовскую Церковь</Typography.Title>                
+              <Typography.Title 
+                level={2} 
+                style={{ 
+                  color: '#E7E7E7',
+                  fontFamily: "'circle-contrast_medium', sans-serif",
+                  fontWeight: 500
+                }}
+              >Добро пожаловать в Спассо-Парголовскую Церковь</Typography.Title>                
             </header>
             <div className="App-main">
                 <div className="Search-bar">
@@ -251,6 +258,16 @@ console.info(defaultData)
             </div>
             <Modal
                 title=""
+                style={{ top: '5vh'}}
+                styles={{
+                  body: {
+                    height: '80vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden'
+                  }
+                }}
+                width={'50%'}
                 open={isModalVisible}
                 onOk={handleOk}
                 okText="Закрыть"
@@ -263,17 +280,25 @@ console.info(defaultData)
                       alt="avatar"
                       src={Img}
                       style={{
-                          width: 200,
+                          width: '40%',
                           borderRadius: 10,
                       }}
                   />
                   <Flex vertical justify="start" style={{ padding: 20 }}>
-                      <Typography.Title level={2} style={{ color: '#1B3041'}}>Фамилия Имя Отчество</Typography.Title>
-                      <Typography.Text secondary style={{ color: '#1B3041'}}> 1897 - 1945</Typography.Text>
-                      <Typography.Title level={4} style={{ color: '#1B3041'}}>Должность</Typography.Title>
+                      <Typography.Title level={2} 
+                      style={{ 
+                        color: '#1B3041',
+                        fontFamily: "'circle-contrast_medium', sans-serif",
+                        fontWeight: 500
+                      }}>Протоиерей Стефан Иванович Черняев</Typography.Title>
+                      <Typography.Text secondary style={{ color: '#1B3041'}}>(1886-1937)</Typography.Text>
+                      <Typography.Title level={4} style={{ color: '#1B3041'}}>настоятель в 1935-1937 гг.</Typography.Title>
                   </Flex>
               </Flex>
-              <p>{text.map(t => <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{t}</p>)}</p>
+              <div className='modal-content'>
+                <p>{testText.map(t => <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{t}</p>)}</p>
+              </div>
+              
             </Modal>
             <div className="Keyboard-bar">
                 <Keyboard
