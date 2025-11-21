@@ -70,6 +70,7 @@ body,
 .Search-bar {
   flex-shrink: 0;
   padding: 0 0.5rem;
+  padding: 0 0.5rem;
 }
 
 .Tree-wrapper {
@@ -78,12 +79,14 @@ body,
   min-height: 0;
   padding: 0.5rem;
   background-color: rgba(255, 255, 255, 0);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .Keyboard-bar {
   flex-shrink: 0;
   margin-top: auto;
   padding-top: 1rem;
+  border-top: 1px solid #1B3041;
   border-top: 1px solid #1B3041;
   position: sticky;
   bottom: 0;
