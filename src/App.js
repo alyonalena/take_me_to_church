@@ -130,8 +130,7 @@ function App() {
       const loop = (data) =>
         data.map((item) => {
           const strTitle = item.title
-          let title 
-          let title 
+          let title
           const strTitleLower = item.title.toLowerCase()
           const index = strTitleLower.indexOf(searchValue.toLowerCase())
           const beforeStr = strTitle.substring(0, index)
@@ -267,13 +266,6 @@ console.info(defaultData)
                           width: 200,
                           borderRadius: 10,
                       }}
-                      draggable={false}
-                      alt="avatar"
-                      src={Img}
-                      style={{
-                          width: 200,
-                          borderRadius: 10,
-                      }}
                   />
                   <Flex vertical justify="start" style={{ padding: 20 }}>
                       <Typography.Title level={2} style={{ color: '#1B3041'}}>Фамилия Имя Отчество</Typography.Title>
@@ -283,19 +275,6 @@ console.info(defaultData)
                       <Typography.Text secondary style={{ color: '#1B3041'}}> 1897 - 1945</Typography.Text>
                       <Typography.Title level={4} style={{ color: '#1B3041'}}>Должность</Typography.Title>
                   </Flex>
-              </Flex>
-              <p>{text.map(t => <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{t}</p>)}</p>
-            </Modal>
-            <div className="Keyboard-bar">
-                <Keyboard
-                    layout={greekLayout}
-                    keyboardRef={(r) => (keyboard.current = r)} 
-                    layoutName={layout}
-                    onChange={onChange}
-                    onKeyPress={onKeyPress}
-                />
-            </div>
-        </div>
               </Flex>
               <p>{text.map(t => <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{t}</p>)}</p>
             </Modal>
