@@ -61,24 +61,11 @@ function App() {
   const [layout, setLayout] = useState("default")
 
   // Fallback default data in case API fails or returns unexpected format
-  const fallbackData = [ 
-    { 
-      title: "Настоятели", 
-      key: '0'
-    },
-    { 
-      title: "Духовенство", 
-      key: '1'
-    },    
-    { 
-      title:  "Хор", 
-      key: '2',
-    }, 
-  ]
+  const fallbackData = []
 
   // Use fetched data if available, otherwise use fallback
   const defaultData = useMemo(() => {
-    console.info(dataSource)
+
     if (dataSource?.results && Array.isArray(dataSource.results) && dataSource.results.length > 0) {
       console.info(dataSource.results)
       return dataSource.results
@@ -91,9 +78,8 @@ function App() {
     const generateList = (data) => {
       for (let i = 0; i < data.length; i++) {
         const node = data[i]
-        console.info(node)
-        const { key, title, first_name } = node
-        list.push({ title: title || first_name, key})
+        const { key, title } = node
+        list.push({ title, key})
         if (node.children) {
           generateList(node.children)
         }
@@ -137,7 +123,6 @@ function App() {
           const afterStr = strTitle.slice(index + searchValue.length)
           const value = strTitle.substring(index, index + searchValue.length)
           title =
-          title =
             index > -1 ? (
               <span key={item.key}>
                 {beforeStr}
@@ -154,12 +139,6 @@ function App() {
           }
 
           if (item.children) {
-            title = (
-              <span style={{ fontSize: '1.1rem' }}>{title}</span>
-            )
-          }
-
-          if (item.children) {
             return { title, key: item.key, children: loop(item.children) }
           }
 
@@ -168,9 +147,8 @@ function App() {
             key: item.key,
           }
       })
-console.info(defaultData)
     return loop(defaultData)
-  }, [searchValue])
+  }, [searchValue, defaultData])
 
   const onKeyPress = (button) => {
       if (button === "{shift}" || button === "{lock}") {
@@ -239,10 +217,6 @@ console.info(defaultData)
                 <div className="Tree-wrapper">
                     {isLoading ? (
                       <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
-                    ) : isError ? (
-                      <Typography.Text type="danger" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
-                        Ошибка загрузки данных. Используются данные по умолчанию.
-                      </Typography.Text>
                     ) : (
                       <Tree
                           style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
