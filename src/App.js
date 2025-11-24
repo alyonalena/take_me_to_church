@@ -26,6 +26,7 @@ const getParentKey = (key, tree) => {
 function App() {
 
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [selectedPersonId, setSelectedPersonId] = useState(null)
   const keyboard = useRef(null)
 
   const { data: dataSource, isLoading, isError } = useQuery({
@@ -42,6 +43,24 @@ function App() {
       }
       return response.json()
     },
+  })
+
+  const { data: personData, isLoading: isPersonLoading } = useQuery({
+    queryKey: ['person', selectedPersonId],
+    queryFn: async () => {
+      if (!selectedPersonId) return null
+      const response = await fetch(`https://dq94-qj2m-e53n.gw-1a.dockhost.net/api/people/${selectedPersonId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    },
+    enabled: !!selectedPersonId && isModalVisible,
   }) 
 
   const showModal = () => {
@@ -50,12 +69,12 @@ function App() {
 
   const handleOk = () => {
     setIsModalVisible(false)
-    // Perform any "OK" related actions here
+    setSelectedPersonId(null)
   };
 
   const handleCancel = () => {
     setIsModalVisible(false)
-    // Perform any "Cancel" related actions here
+    setSelectedPersonId(null)
   };
 
   const [layout, setLayout] = useState("default")
@@ -173,11 +192,29 @@ function App() {
       ],
   }
 
+  const findPersonIdByKey = (key, data) => {
+    for (let i = 0; i < data.length; i++) {
+      const node = data[i]
+      if (node.key === key && !node.children) {
+        return node.id
+      }
+      if (node.children) {
+        const found = findPersonIdByKey(key, node.children)
+        if (found) return found
+      }
+    }
+    return null
+  }
+
   const onTreeSelect = (item) => {
     if (item?.node?.children) {
       return 
     } else {
-      showModal()
+      const personId = findPersonIdByKey(item.node.key, defaultData)
+      if (personId) {
+        setSelectedPersonId(personId)
+        showModal()
+      }
     }
   }
 
@@ -190,7 +227,6 @@ function App() {
     }
   }
 
-  const testText = "В настоящее время идет процесс канонизации протоиерея Стефана Черняева и причисления его к лику Новомучеников и Исповедников Церкви Русской.\r\nСтефан Иванович родился 24 января 1886 года в городе Пскове в многодетной крестьянской семье. В 1906 году Стефан со своим старшим братом окончил Псковскую Духовную семинарию, после чего приехал в Петербург.\r\nЗдесь он успешно окончил Духовную Академию и Императорский Петроградский Археологический институт. Вскоре Стефан Иванович женился на дочери потомственного почетного гражданина Антонине Федоровне Никифоровой. У них было четверо детей: два мальчика и две девочки.\r\nС 1910 по 1913 год он нес послушание псаломщика в Успенской церкви на Сенной площади. В августе 1913 года его рукоположили во диакона и перевели в Спасо Бочаринский храм. 19 июня 1916 года в Свято-Троицком соборе Александро-Невской лавры отец Стефан принял священнический сан. Через год его перевели в церковь святых апостолов Петра и Павла, где позднее назначили настоятелем.\r\nС приходом советской власти на Церковь обрушились гонения, которые не обошли стороной и отца Стефана. Чтобы прокормить семью, батюшка, не оставляя священнического служения, вынужден был подрабатывать на железной дороге. В 1922 году в церкви произошел обновленческий раскол, в результате которого большая часть городских храмов присоединилась к раскольникам. Несмотря на это, отец Стефан сохранил верность законной Патриаршей церкви. Ни он, ни храмы, в которых он был настоятелем, никогда не были связаны с обновленцами.\r\n25 августа 1930 года батюшку арестовали по надуманному обвинению в хранении мелкой серебряной монеты. В этой ситуации отец Стефан повел себя как настоящий христианин. Та малая сумма, за которую его обвиняли, принадлежала не ему, а его соседке. Батюшка скрыл этот факт от следствия и взял вину на себя. Тем самым он спас пожилую женщину от тюрьмы, проведя вместо нее в заключении несколько месяцев.\r\nНужно отметить, что отец Стефан был очень мужественным человеком, что проявлялось неоднократно. Например, он не побоялся организовать материальную помощь опальным ссыльным священникам, за что сам оказался под надзором у органов.\r\nНа него неоднократно поступали доносы, в которых он обвинялся в антисоветской настроенности. Из этих доносов можно увидеть, каким на самом деле был отец Стефан. Например, в одном из них секретный агент, будучи врагом церкви, дает характеристику батюшке: «Черняев – добрый, миролюбивый, отзывчивый, хороший проповедник, не ищет славы, положения и чести…».\r\nВ августе 1935 года советские власти закрыли Петропавловскую церковь, где служил батюшка. Вскоре по решению священноначалия его перевели настоятелем в Спасо-Парголовский храм. Отец Стефан и здесь пользовался большим доверием и любовью прихожан, что не могло нравиться советской власти. На батюшку продолжали поступать различные доносы, и вскоре на него сформировалось большое досье.\r\nС началом «Большого террора» отца Стефана арестовали одним из первых. 9 октября 1937 года его заключили в тюрьму на Арсенальной набережной. На допросах следователь склонял его к предательству ближних.".split('\r\n')
   return (
         <div className="App-content" style={{ backgroundImage: `url(${BackgroundImg})`, backgroundColor: '#445B6D', backgroundSize: 'auto 100vh', backgroundPosition: 'top right', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
             <header className="App-header">
@@ -248,31 +284,73 @@ function App() {
                 onCancel={handleCancel}
                 cancelButtonProps={{ style: { display: 'none' } }} // Hides the Cancel button
             >
-              <Flex justify="space-between" style={{ paddingBottom: 20 }}>
-                  <img
-                      draggable={false}
-                      alt="avatar"
-                      src={Img}
-                      style={{
-                          width: '40%',
-                          borderRadius: 10,
-                      }}
-                  />
-                  <Flex vertical justify="start" style={{ padding: 20 }}>
-                      <Typography.Title level={2} 
-                      style={{ 
-                        color: '#1B3041',
-                        fontFamily: "'circle-contrast_medium', sans-serif",
-                        fontWeight: 500
-                      }}>Протоиерей Стефан Иванович Черняев</Typography.Title>
-                      <Typography.Text secondary style={{ color: '#1B3041'}}>(1886-1937)</Typography.Text>
-                      <Typography.Title level={4} style={{ color: '#1B3041'}}>настоятель в 1935-1937 гг.</Typography.Title>
+              {isPersonLoading ? (
+                <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
+              ) : personData ? (
+                <>
+                  <Flex justify="space-between" style={{ paddingBottom: 20 }}>
+                      <img
+                          draggable={false}
+                          alt="avatar"
+                          src={(() => {
+                            if (personData.photos && personData.photos.length > 0) {
+                              const mainPhoto = personData.photos.find(p => p.is_main) || personData.photos[0]
+                              const photoUrl = mainPhoto.photo_url
+                              return photoUrl.startsWith('http') 
+                                ? photoUrl 
+                                : `https://dq94-qj2m-e53n.gw-1a.dockhost.net${photoUrl}`
+                            }
+                            console.log(Img)
+                            return Img
+                          })()}
+                          style={{
+                              width: '40%',
+                              borderRadius: 10,
+                              objectFit: 'cover',
+                          }}
+                      />
+                      <Flex vertical justify="start" style={{ padding: 20 }}>
+                          <Typography.Title level={2} 
+                          style={{ 
+                            color: '#1B3041',
+                            fontFamily: "'circle-contrast_medium', sans-serif",
+                            fontWeight: 500
+                          }}>
+                            {personData.rank ? `${personData.rank} ` : ''}
+                            {personData.first_name} {personData.middle_name} {personData.last_name}
+                          </Typography.Title>
+                          <Typography.Text secondary style={{ color: '#1B3041'}}>
+                            {personData.birth_year && personData.death_year 
+                              ? `(${personData.birth_year}-${personData.death_year})`
+                              : personData.birth_year 
+                              ? `(род. ${personData.birth_year})`
+                              : ''}
+                          </Typography.Text>
+                          {personData.job_title && (
+                            <Typography.Title level={4} style={{ color: '#1B3041'}}>
+                              {personData.job_title}
+                              {personData.work_start_year && personData.work_end_year
+                                ? ` в ${personData.work_start_year}-${personData.work_end_year} гг.`
+                                : personData.work_start_year
+                                ? ` с ${personData.work_start_year} г.`
+                                : ''}
+                            </Typography.Title>
+                          )}
+                      </Flex>
                   </Flex>
-              </Flex>
-              <div className='modal-content'>
-                <p>{testText.map(t => <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{t}</p>)}</p>
-              </div>
-              
+                  <div className='modal-content'>
+                    {personData.description && (
+                      <div style={{ whiteSpace: 'pre-line' }}>
+                        {personData.description.split('\r\n').map((paragraph, index) => (
+                          <p key={index} style={{ margin: '0 0 1em 0' }}>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{paragraph}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : null}
             </Modal>
             <div className="Keyboard-bar">
                 <Keyboard
