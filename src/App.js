@@ -86,7 +86,6 @@ function App() {
   const defaultData = useMemo(() => {
 
     if (dataSource?.results && Array.isArray(dataSource.results) && dataSource.results.length > 0) {
-      console.info(dataSource.results)
       return dataSource.results
     }
     return fallbackData
@@ -158,11 +157,12 @@ function App() {
           }
 
           if (item.children) {
-            return { title, key: item.key, children: loop(item.children) }
+            return { title, key: item.key, id: item.id, children: loop(item.children) }
           }
 
           return {
             title,
+            id: item.id,
             key: item.key,
           }
       })
@@ -175,7 +175,7 @@ function App() {
       }
   }
 
-  const greekLayout = {
+  const russianLayout = {
       default: [
           "` 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
           "{tab} ; й ц у к е н г ш щ з х ъ [ ] \\",
@@ -192,25 +192,11 @@ function App() {
       ],
   }
 
-  const findPersonIdByKey = (key, data) => {
-    for (let i = 0; i < data.length; i++) {
-      const node = data[i]
-      if (node.key === key && !node.children) {
-        return node.id
-      }
-      if (node.children) {
-        const found = findPersonIdByKey(key, node.children)
-        if (found) return found
-      }
-    }
-    return null
-  }
-
   const onTreeSelect = (item) => {
     if (item?.node?.children) {
       return 
     } else {
-      const personId = findPersonIdByKey(item.node.key, defaultData)
+      const personId = item?.node?.id
       if (personId) {
         setSelectedPersonId(personId)
         showModal()
@@ -300,7 +286,6 @@ function App() {
                                 ? photoUrl 
                                 : `https://dq94-qj2m-e53n.gw-1a.dockhost.net${photoUrl}`
                             }
-                            console.log(Img)
                             return Img
                           })()}
                           style={{
@@ -354,7 +339,7 @@ function App() {
             </Modal>
             <div className="Keyboard-bar">
                 <Keyboard
-                    layout={greekLayout}
+                    layout={russianLayout}
                     keyboardRef={(r) => (keyboard.current = r)} 
                     layoutName={layout}
                     onChange={onChange}
