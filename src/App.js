@@ -152,7 +152,7 @@ function App() {
             )
           if (item.children) {
             title = (
-              <span style={{ fontSize: '1.1rem' }}>{title}</span>
+              <span style={{ fontSize: '1.2rem' }}><strong>{title}</strong></span>
             )
           }
 
@@ -211,6 +211,31 @@ function App() {
     if (keyboard.current) {
       keyboard.current.clearInput()
     }
+  }
+
+               
+  const getImage = () => {
+    let Img 
+    if (personData.photos && personData.photos.length > 0) {
+      const mainPhoto = personData.photos.find(p => p.is_main) || personData.photos[0]
+      const photoUrl = mainPhoto.photo_url
+      Img = photoUrl.startsWith('http') 
+        ? photoUrl 
+        : `https://dq94-qj2m-e53n.gw-1a.dockhost.net${photoUrl}`
+    }
+     
+    return Img ? (
+      <img
+          draggable={false}
+          alt="avatar"
+          src={Img}
+          style={{
+              width: '40%',
+              borderRadius: 10,
+              objectFit: 'cover',
+          }}
+      />
+    ) : null
   }
 
   return (
@@ -275,25 +300,7 @@ function App() {
               ) : personData ? (
                 <>
                   <Flex justify="space-between" style={{ paddingBottom: 20 }}>
-                      <img
-                          draggable={false}
-                          alt="avatar"
-                          src={(() => {
-                            if (personData.photos && personData.photos.length > 0) {
-                              const mainPhoto = personData.photos.find(p => p.is_main) || personData.photos[0]
-                              const photoUrl = mainPhoto.photo_url
-                              return photoUrl.startsWith('http') 
-                                ? photoUrl 
-                                : `https://dq94-qj2m-e53n.gw-1a.dockhost.net${photoUrl}`
-                            }
-                            return Img
-                          })()}
-                          style={{
-                              width: '40%',
-                              borderRadius: 10,
-                              objectFit: 'cover',
-                          }}
-                      />
+                      {getImage()}
                       <Flex vertical justify="start" style={{ padding: 20 }}>
                           <Typography.Title level={2} 
                           style={{ 
