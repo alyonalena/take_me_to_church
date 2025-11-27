@@ -1,6 +1,6 @@
 import './App.css'
 import { Input, Tree, Modal, Typography, Flex, Spin } from 'antd'
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import Keyboard from "react-simple-keyboard"
@@ -22,7 +22,37 @@ const getParentKey = (key, tree) => {
   return parentKey
 }
 
+const useInactivityReload = (timeout = 180000) => { // 3 минуты по умолчанию
+  useEffect(() => {
+    let inactivityTimer
+
+    const resetTimer = () => {
+      clearTimeout(inactivityTimer)
+      inactivityTimer = setTimeout(() => {
+        window.location.reload()
+      }, timeout)
+    }
+
+    // Инициализация таймера
+    resetTimer();
+
+    // События, сбрасывающие таймер
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
+    events.forEach(event => 
+      document.addEventListener(event, resetTimer, { passive: true })
+    )
+
+    return () => {
+      clearTimeout(inactivityTimer);
+      events.forEach(event => 
+        document.removeEventListener(event, resetTimer)
+      )
+    }
+  }, [timeout])
+}
+
 function App() {
+  useInactivityReload()
 
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedPersonId, setSelectedPersonId] = useState(null)
