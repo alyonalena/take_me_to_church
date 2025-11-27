@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
-import Img from '../src/img/image.jpg'
 import BackgroundImg from '../src/img/background.png'
 
 const getParentKey = (key, tree) => {
