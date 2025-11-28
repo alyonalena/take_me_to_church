@@ -137,8 +137,11 @@ root.render(
                 headerBg: '#ECECEC',
                 footerBg: '#ECECEC',
                 algorithm: true,
+                zIndexPopupBase: 1002
               },
-              
+              Drawer: {
+                algorithm: true,
+              },
               // Layout component customization
               Layout: {
                 bodyBg: '#f5f7fa',

@@ -1,5 +1,5 @@
 import './App.css'
-import { Input, Tree, Modal, Typography, Flex, Spin } from 'antd'
+import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button } from 'antd'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
@@ -56,6 +56,7 @@ function App() {
 
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedPersonId, setSelectedPersonId] = useState(null)
+  const [isKeyboardDrawerOpen, setIsKeyboardDrawerOpen] = useState(false)
   const keyboard = useRef(null)
 
   const { data: dataSource, isLoading, isError } = useQuery({
@@ -160,41 +161,61 @@ function App() {
   }
 
   const treeData = useMemo(() => {
-      const loop = (data) =>
-        data.map((item) => {
-          const strTitle = item.title
-          let title
-          const strTitleLower = item.title.toLowerCase()
-          const index = strTitleLower.indexOf(searchValue.toLowerCase())
-          const beforeStr = strTitle.substring(0, index)
-          const afterStr = strTitle.slice(index + searchValue.length)
-          const value = strTitle.substring(index, index + searchValue.length)
-          title =
-            index > -1 ? (
-              <span key={item.key}>
-                {beforeStr}
-                <span className="site-tree-search-value">{value}</span>
-                {afterStr}
-              </span>
-            ) : (
-              <span key={item.key}>{strTitle}</span>
-            )
-          if (item.children) {
-            title = (
-              <span style={{ fontSize: '1.2rem' }}><strong>{title}</strong></span>
-            )
-          }
+      const loop = (data) => {
+        const searchLower = searchValue.toLowerCase()
+        const hasSearch = searchLower.length > 0
+        
+        return data
+          .map((item) => {
+            const strTitle = item.title
+            let title
+            const strTitleLower = item.title.toLowerCase()
+            const index = strTitleLower.indexOf(searchLower)
+            const beforeStr = strTitle.substring(0, index)
+            const afterStr = strTitle.slice(index + searchValue.length)
+            const value = strTitle.substring(index, index + searchValue.length)
+            title =
+              index > -1 ? (
+                <span key={item.key}>
+                  {beforeStr}
+                  <span className="site-tree-search-value">{value}</span>
+                  {afterStr}
+                </span>
+              ) : (
+                <span key={item.key}>{strTitle}</span>
+              )
+            if (item.children) {
+              title = (
+                <span style={{ fontSize: '1.2rem' }}><strong>{title}</strong></span>
+              )
+            }
 
-          if (item.children) {
-            return { title, key: item.key, id: item.id, children: loop(item.children) }
-          }
+            if (item.children) {
+              // For parent items, always show them but filter their children
+              const filteredChildren = loop(item.children)
+              
+              // Always return parent, even if it has no matching children
+              return { 
+                title, 
+                key: item.key, 
+                id: item.id, 
+                children: filteredChildren 
+              }
+            }
 
-          return {
-            title,
-            id: item.id,
-            key: item.key,
-          }
-      })
+            // For leaf items, only show if they match the search (or if no search)
+            if (hasSearch && index === -1) {
+              return null // Hide leaf items that don't match
+            }
+
+            return {
+              title,
+              id: item.id,
+              key: item.key,
+            }
+          })
+          .filter(item => item !== null) // Remove null items (hidden items)
+      }
     return loop(defaultData)
   }, [searchValue, defaultData])
 
@@ -222,6 +243,7 @@ function App() {
   }
 
   const onTreeSelect = (item) => {
+    setIsKeyboardDrawerOpen(false)
     if (item?.node?.children) {
       return 
     } else {
@@ -277,7 +299,7 @@ function App() {
                   fontFamily: "'circle-contrast_medium', sans-serif",
                   fontWeight: 500
                 }}
-              >Добро пожаловать в Спассо-Парголовскую Церковь</Typography.Title>                
+              >Добро пожаловать в Спассо-Парголовский Храм</Typography.Title>                
             </header>
             <div className="App-main">
                 <div className="Search-bar">
@@ -373,15 +395,44 @@ function App() {
                 </>
               ) : null}
             </Modal>
-            <div className="Keyboard-bar">
-                <Keyboard
-                    layout={russianLayout}
-                    keyboardRef={(r) => (keyboard.current = r)} 
-                    layoutName={layout}
-                    onChange={onChange}
-                    onKeyPress={onKeyPress}
-                />
+            <div style={{ 
+              position: 'fixed', 
+              bottom: 20, 
+              left: '50%', 
+              transform: 'translateX(-50%)', 
+              zIndex: 1001
+            }}>
+              <Button 
+                type="primary" 
+                size="large"
+                onClick={() => setIsKeyboardDrawerOpen(isKeyboardDrawerOpen ? false: true)}
+              >
+                { isKeyboardDrawerOpen ? "Скрыть клавиатуру" : "Открыть клавиатуру" }
+              </Button>
             </div>
+            <Drawer
+                placement="bottom"
+                height={350}
+                open={isKeyboardDrawerOpen}
+                onClose={() => {
+                  setIsKeyboardDrawerOpen(false)
+                  if (keyboard.current) {
+                    keyboard.current.clearInput()
+                  }
+                }}
+                closable={false}
+                mask={false}
+            >
+                <Keyboard
+                  layout={russianLayout}
+                  style={{color: 'black'}}
+                  keyboardRef={(r) => (keyboard.current = r)} 
+                  layoutName={layout}
+                  onChange={onChange}
+                  onKeyPress={onKeyPress}
+                />
+                <br/>
+            </Drawer>
         </div>
     )
 }
