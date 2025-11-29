@@ -242,12 +242,20 @@ function App() {
       ],
   }
 
-  const onTreeSelect = (item) => {
+  const onTreeSelect = (selectedKeys, info) => {
     setIsKeyboardDrawerOpen(false)
-    if (item?.node?.children) {
-      return 
+    const node = info.node
+    if (node.children) {
+      // Toggle expansion for parent nodes
+      const key = node.key
+      if (expandedKeys.includes(key)) {
+        setExpandedKeys(expandedKeys.filter(k => k !== key))
+      } else {
+        setExpandedKeys([...expandedKeys, key])
+      }
     } else {
-      const personId = item?.node?.id
+      // Open modal for leaf nodes
+      const personId = node.id
       if (personId) {
         setSelectedPersonId(personId)
         showModal()
@@ -319,11 +327,12 @@ function App() {
                       <Tree
                           style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
                           showLine
+                          blockNode
                           onExpand={onExpand}
                           expandedKeys={expandedKeys}
                           autoExpandParent={autoExpandParent}
                           treeData={treeData}
-                          onSelect={(id, item) => onTreeSelect(item)}
+                          onSelect={onTreeSelect}
                       />
                     )}
                 </div>
