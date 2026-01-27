@@ -65,7 +65,7 @@ function App() {
   const [isKeyboardDrawerOpen, setIsKeyboardDrawerOpen] = useState(false)
   const keyboard = useRef(null)
 
-  const { data: dataSource, isLoading, isError } = useQuery({
+  const { data: dataSource, isLoading } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
       const response = await fetch("https://dq94-qj2m-e53n.gw-1a.dockhost.net/api/groups/", {
