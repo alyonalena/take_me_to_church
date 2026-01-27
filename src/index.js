@@ -122,7 +122,7 @@ root.render(
               
              
               // Select component customization
-          Select: {
+              Select: {
                 colorBgContainer: '#315877',
                 colorBorder: '#d9d9d9',
                 optionSelectedBg: 'rgba(49, 88, 119, 0.08)',
@@ -151,6 +151,10 @@ root.render(
                 triggerBg: '#102a4e',             // Even darker for trigger
                 algorithm: true,
               },
+              Tabs: {
+                itemSelectedColor: '#25313B',                
+                colorPrimaryActive: '#25313B',                
+              }
             },
           }}
       >

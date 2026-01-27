@@ -1,5 +1,5 @@
 import './App.css'
-import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button } from 'antd'
+import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs } from 'antd'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
@@ -53,6 +53,12 @@ const useInactivityReload = (timeout = 180000) => { // 3 минуты по ум�
 
 function App() {
   useInactivityReload()
+
+  const [isFirstOnTop, setIsFirstOnTop] = useState(true)
+
+  const handleClickOne = () => setIsFirstOnTop(true)
+  const handleClickTwo = () => setIsFirstOnTop(false)
+
 
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedPersonId, setSelectedPersonId] = useState(null)
@@ -320,22 +326,138 @@ function App() {
                       onChange={(e) => onChange(e.target.value)}
                     />
                 </div>
-                <div className="Tree-wrapper">
-                    {isLoading ? (
-                      <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
-                    ) : (
-                      <Tree
-                          style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
-                          showLine
-                          blockNode
-                          onExpand={onExpand}
-                          expandedKeys={expandedKeys}
-                          autoExpandParent={autoExpandParent}
-                          treeData={treeData}
-                          onSelect={onTreeSelect}
+                <div style={{ position: "relative", width: '90%', height: '90vh', margin: '50px' }}>
+                  <div
+                    onClick={handleClickOne}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "#526C82",
+                      color: "#E7E7E7",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-start",
+                      flexDirection: "column",
+                      cursor: "pointer",
+                      border: '1px solid #25313B',
+                      borderRadius: '30px',
+                      zIndex: isFirstOnTop ? 2 : 1,
+                      width: '90%',
+                      height: '90%',
+                      boxShadow: '4px 4px 8px 0px #25313B',
+                      transform: isFirstOnTop ? "translateX(0) translateY(70px)" : "translateX(70px) translateY(0)",
+                      transition: "transform 0.5s ease, opacity 0.5s ease",
+                      padding: '0 20px'
+                    }}
+                  >
+                    <Typography.Title 
+                      level={2} 
+                      style={{ 
+                        color: '#E7E7E7',
+                        fontFamily: "'circle-contrast_medium', sans-serif",
+                        fontWeight: 500
+                      }}
+                    >Биографии</Typography.Title>
+                    <Tabs                    
+                      style={{width: '100%', overflow: 'hidden'}}
+                      defaultActiveKey="1" 
+                      items={[
+                        {
+                          key: '1',
+                          label: 'Настоятели',
+                          children: (
+                            <div className="Tree-wrapper">
+                                {isLoading ? (
+                                  <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
+                                ) : (
+                                  <Tree
+                                      style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+                                      showLine
+                                      blockNode
+                                      onExpand={onExpand}
+                                      expandedKeys={expandedKeys}
+                                      autoExpandParent={autoExpandParent}
+                                      treeData={treeData}
+                                      onSelect={onTreeSelect}
+                                  />
+                                )}
+                            </div>
+                          )
+                        },
+                        {
+                          key: '2',
+                          label: 'Клир',
+                          children: <p>Контент второй вкладки</p>,
+                        },
+                        {
+                          key: '3',
+                          label: 'Именитые прихожане',
+                          children: <p>Контент третьей вкладки</p>,
+                        },
+                      ]} 
+                      onChange={(key) => console.log(key)} 
+                    />                      
+                  </div>
+
+                  <div
+                    onClick={handleClickTwo}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "#526C82",
+                      border: '1px solid #25313B',
+                      borderRadius: '30px',
+                      color: "#E7E7E7",
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "flex-start",
+                      flexDirection: "column",
+                      cursor: "pointer",
+                      width: '90%',
+                      zIndex: isFirstOnTop ? 1 : 2,
+                      height: '90%',
+                      boxShadow: '4px 4px 8px 0px #25313B',
+                      transform: isFirstOnTop ? "translateX(70px) translateY(0)" : "translateX(0) translateY(70px)",
+                      transition: "transform 0.5s ease, opacity 0.5s ease",
+                      padding: '0 20px'
+                    }}
+                  >
+                    <Typography.Title 
+                      level={2} 
+                      style={{ 
+                        color: '#E7E7E7',
+                        fontFamily: "'circle-contrast_medium', sans-serif",
+                        fontWeight: 500
+                      }}
+                    >Архив фото</Typography.Title>
+                      <Tabs
+                        style={{width: '100%', overflow: 'hidden'}}
+                        defaultActiveKey="1" 
+                        items={[
+                          {
+                            key: '1',
+                            label: 'Парголово XIX - н.XX вв.',
+                            children: <p>Контент второй вкладки</p>,
+                          },
+                          {
+                            key: '2',
+                            label: 'Жизнь Храма',
+                            children: <p>Контент второй вкладки</p>,
+                          },
+                          {
+                            key: '3',
+                            label: 'Интересные документы',
+                            children: <p>Контент третьей вкладки</p>,
+                          },
+                        ]} 
+                        onChange={(key) => console.log(key)} 
                       />
-                    )}
+                  </div>
                 </div>
+                
+
+
+
             </div>
             <Modal
                 title=""
