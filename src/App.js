@@ -1,11 +1,21 @@
 import './App.css'
-import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs } from 'antd'
+import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs, Carousel } from 'antd'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { FileImageOutlined } from '@ant-design/icons'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 import BackgroundImg from '../src/img/background.png'
+
+const contentStyle = {
+  margin: 0,
+  height: '160px',
+  color: '#fff',
+  lineHeight: '160px',
+  textAlign: 'center',
+  background: '#445B6D',
+};
 
 const getParentKey = (key, tree) => {
   let parentKey
@@ -55,6 +65,8 @@ function App() {
   useInactivityReload()
 
   const [isFirstOnTop, setIsFirstOnTop] = useState(true)
+  const [showPicMode, setShowPicMode] = useState(false)
+
 
   const handleClickOne = () => setIsFirstOnTop(true)
   const handleClickTwo = () => setIsFirstOnTop(false)
@@ -110,6 +122,7 @@ function App() {
 
   const handleCancel = () => {
     setIsModalVisible(false)
+    setShowPicMode(false)
     setSelectedPersonId(null)
   };
 
@@ -218,12 +231,42 @@ function App() {
               title,
               id: item.id,
               key: item.key,
+              icon: <FileImageOutlined />
             }
           })
           .filter(item => item !== null) // Remove null items (hidden items)
       }
     return loop(defaultData)
   }, [searchValue, defaultData])
+
+  const treeDataDocs = [
+    {
+      title: 'Документ 1',
+      id: 1,
+      key: 1,
+      icon: <FileImageOutlined />
+    },
+    {
+      title: 'Документ 2',
+      id: 2,
+      key: 2,
+      icon: <FileImageOutlined />
+    },
+    {
+      title: 'Документ 3',
+      id: 3,
+      key: 3,
+      icon: <FileImageOutlined />
+    },
+    {
+      title: 'Документ 4',
+      id: 4,
+      key: 4,
+      icon: <FileImageOutlined />
+    }
+  ]
+
+  console.info(treeData)
 
   const onKeyPress = (button) => {
       if (button === "{shift}" || button === "{lock}") {
@@ -267,6 +310,15 @@ function App() {
         showModal()
       }
     }
+  }
+
+  const onDocTreeSelect = () => {    
+    setShowPicMode(true)
+  }
+
+  const onArchivedDocTreeSelect = () => {
+    setShowPicMode(true)
+    showModal()
   }
 
   const onClear = () => {
@@ -366,7 +418,7 @@ function App() {
                           key: '1',
                           label: 'Настоятели',
                           children: (
-                            <div className="Tree-wrapper">
+                            <div className="Tree-wrapper" style={{  overflow: 'auto' }}>
                                 {isLoading ? (
                                   <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
                                 ) : (
@@ -377,7 +429,7 @@ function App() {
                                       onExpand={onExpand}
                                       expandedKeys={expandedKeys}
                                       autoExpandParent={autoExpandParent}
-                                      treeData={treeData}
+                                      treeData={treeData[0]?.children || []}
                                       onSelect={onTreeSelect}
                                   />
                                 )}
@@ -429,7 +481,7 @@ function App() {
                         fontFamily: "'circle-contrast_medium', sans-serif",
                         fontWeight: 500
                       }}
-                    >Архив фото</Typography.Title>
+                    >Архив фотографий и документов</Typography.Title>
                       <Tabs
                         style={{width: '100%', overflow: 'hidden'}}
                         defaultActiveKey="1" 
@@ -437,7 +489,25 @@ function App() {
                           {
                             key: '1',
                             label: 'Парголово XIX - н.XX вв.',
-                            children: <p>Контент второй вкладки</p>,
+                            children:  (
+                              <div className="Tree-wrapper" style={{ overflow: 'auto' }}>
+                                  {isLoading ? (
+                                      <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
+                                  ) : (
+                                      <Tree
+                                          style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+                                          showLine
+                                          showIcon
+                                          blockNode
+                                          onExpand={onExpand}
+                                          expandedKeys={expandedKeys}
+                                          autoExpandParent={autoExpandParent}
+                                          treeData={treeDataDocs}
+                                          onSelect={onArchivedDocTreeSelect}
+                                      />
+                                  )}
+                              </div>
+                            )
                           },
                           {
                             key: '2',
@@ -477,54 +547,93 @@ function App() {
                 onCancel={handleCancel}
                 cancelButtonProps={{ style: { display: 'none' } }} // Hides the Cancel button
             >
-              {isPersonLoading ? (
-                <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
-              ) : personData ? (
+              { showPicMode ? (
                 <>
-                  <Flex justify="space-between" style={{ paddingBottom: 20 }}>
-                      {getImage()}
-                      <Flex vertical justify="start" style={{ padding: 20 }}>
-                          <Typography.Title level={2} 
-                          style={{ 
-                            color: '#1B3041',
-                            fontFamily: "'circle-contrast_medium', sans-serif",
-                            fontWeight: 500
-                          }}>
-                            {personData.rank ? `${personData.rank} ` : ''}
-                            {personData.first_name} {personData.middle_name} {personData.last_name}
-                          </Typography.Title>
-                          <Typography.Text secondary style={{ color: '#1B3041'}}>
-                            {personData.birth_year && personData.death_year 
-                              ? `(${personData.birth_year}-${personData.death_year})`
-                              : personData.birth_year 
-                              ? `(род. ${personData.birth_year})`
-                              : ''}
-                          </Typography.Text>
-                          {personData.job_title && (
-                            <Typography.Title level={4} style={{ color: '#1B3041'}}>
-                              {personData.job_title}
-                              {personData.work_start_year && personData.work_end_year
-                                ? ` в ${personData.work_start_year}-${personData.work_end_year} гг.`
-                                : personData.work_start_year
-                                ? ` с ${personData.work_start_year} г.`
-                                : ''}
-                            </Typography.Title>
-                          )}
-                      </Flex>
-                  </Flex>
-                  <div className='modal-content'>
-                    {personData.description && (
-                      <div style={{ whiteSpace: 'pre-line' }}>
-                        {personData.description.split('\r\n').map((paragraph, index) => (
-                          <p key={index} style={{ margin: '0 0 1em 0' }}>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{paragraph}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  <br/>
+                  { selectedPersonId && (
+                      <Button onClick={() => {setShowPicMode(false)}}>
+                        Вернуться к биографии
+                      </Button>
+                  )}
+                  <br/>
+                  <Carousel afterChange={() => {}} dotPosition={'top'}>
+                    <div>
+                      <h3 style={contentStyle}>1</h3>
+                    </div>
+                    <div>
+                      <h3 style={contentStyle}>2</h3>
+                    </div>
+                    <div>
+                      <h3 style={contentStyle}>3</h3>
+                    </div>
+                    <div>
+                      <h3 style={contentStyle}>4</h3>
+                    </div>
+                  </Carousel>
                 </>
-              ) : null}
+              ): 
+                isPersonLoading ? (
+                  <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
+                ) : personData ? (
+                  <>
+                    <Flex justify="space-between" style={{ paddingBottom: 20 }}>
+                        {getImage()}
+                        <Flex vertical justify="start" style={{ padding: 20 }}>
+                            <Typography.Title level={2} 
+                            style={{ 
+                              color: '#1B3041',
+                              fontFamily: "'circle-contrast_medium', sans-serif",
+                              fontWeight: 500
+                            }}>
+                              {personData.rank ? `${personData.rank} ` : ''}
+                              {personData.first_name} {personData.middle_name} {personData.last_name}
+                            </Typography.Title>
+                            <Typography.Text secondary style={{ color: '#1B3041' }}>
+                              {personData.birth_year && personData.death_year 
+                                ? `(${personData.birth_year}-${personData.death_year})`
+                                : personData.birth_year 
+                                ? `(род. ${personData.birth_year})`
+                                : ''}
+                            </Typography.Text>
+                            {personData.job_title && (
+                              <Typography.Title level={4} style={{ color: '#1B3041'}}>
+                                {personData.job_title}
+                                {personData.work_start_year && personData.work_end_year
+                                  ? ` в ${personData.work_start_year}-${personData.work_end_year} гг.`
+                                  : personData.work_start_year
+                                  ? ` с ${personData.work_start_year} г.`
+                                  : ''}
+                              </Typography.Title>
+                            )}
+                            <Typography.Title level={5} style={{ color: '#1B3041'}}>
+                              Архив фотографий и документов:
+                            </Typography.Title>
+                            <Tree
+                                style={{ color: 'black' }}
+                                showLine
+                                showIcon
+                                blockNode
+                                onExpand={onExpand}
+                                expandedKeys={expandedKeys}
+                                autoExpandParent={autoExpandParent}
+                                treeData={treeDataDocs}
+                                onSelect={onDocTreeSelect}
+                            />
+                        </Flex>
+                    </Flex>
+                    <div className='modal-content'>
+                      {personData.description && (
+                        <div style={{ whiteSpace: 'pre-line' }}>
+                          {personData.description.split('\r\n').map((paragraph, index) => (
+                            <p key={index} style={{ margin: '0 0 1em 0' }}>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{paragraph}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : null}
             </Modal>
             <div style={{ 
               position: 'fixed', 
