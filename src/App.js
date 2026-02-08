@@ -384,19 +384,20 @@ function App() {
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "#526C82",
+                      background: "#1A2C3A",
                       color: "#E7E7E7",
                       display: "flex",
                       alignItems: "flex-start",
                       justifyContent: "flex-start",
                       flexDirection: "column",
                       cursor: "pointer",
-                      border: '1px solid #25313B',
-                      borderRadius: '30px',
+                      border: '1px solid rgb(5, 12, 18, 0.6)',
+                      borderRadius: '0.3rem',
                       zIndex: isFirstOnTop ? 2 : 1,
+                      opacity: isFirstOnTop ? 1 : 0.6,
                       width: '90%',
                       height: '90%',
-                      boxShadow: '4px 4px 8px 0px #25313B',
+                      boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)',
                       transform: isFirstOnTop ? "translateX(0) translateY(70px)" : "translateX(70px) translateY(0)",
                       transition: "transform 0.5s ease, opacity 0.5s ease",
                       padding: '0 20px'
@@ -413,6 +414,7 @@ function App() {
                     <Tabs                    
                       style={{width: '100%', overflow: 'hidden'}}
                       defaultActiveKey="1" 
+                      tabPosition="left"
                       items={[
                         {
                           key: '1',
@@ -456,9 +458,9 @@ function App() {
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "#526C82",
-                      border: '1px solid #25313B',
-                      borderRadius: '30px',
+                      background: "#1A2C3A",
+                      border: '1px solid rgb(5, 12, 18, 0.6)',
+                      borderRadius: '0.3rem',
                       color: "#E7E7E7",
                       display: "flex",
                       alignItems: "flex-start",
@@ -466,9 +468,10 @@ function App() {
                       flexDirection: "column",
                       cursor: "pointer",
                       width: '90%',
-                      zIndex: isFirstOnTop ? 1 : 2,
+                      zIndex: isFirstOnTop ? 1 : 2,                      
+                      opacity: isFirstOnTop ? 0.6 : 1,
                       height: '90%',
-                      boxShadow: '4px 4px 8px 0px #25313B',
+                      boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)',
                       transform: isFirstOnTop ? "translateX(70px) translateY(0)" : "translateX(0) translateY(70px)",
                       transition: "transform 0.5s ease, opacity 0.5s ease",
                       padding: '0 20px'
@@ -484,13 +487,14 @@ function App() {
                     >Архив фотографий и документов</Typography.Title>
                       <Tabs
                         style={{width: '100%', overflow: 'hidden'}}
+                        tabPosition="left"
                         defaultActiveKey="1" 
                         items={[
                           {
                             key: '1',
                             label: 'Парголово XIX - н.XX вв.',
                             children:  (
-                              <div className="Tree-wrapper" style={{ overflow: 'auto' }}>
+                              <div className="Tree-wrapper">
                                   {isLoading ? (
                                       <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
                                   ) : (
@@ -512,7 +516,11 @@ function App() {
                           {
                             key: '2',
                             label: 'Жизнь Храма',
-                            children: <p>Контент второй вкладки</p>,
+                            children: (
+                              <div style={{minHeight: '100%', border: '1px solid red'}}>
+                                Контент второй вкладки
+                              </div>
+                            ),
                           },
                           {
                             key: '3',
@@ -643,7 +651,6 @@ function App() {
               zIndex: 1001
             }}>
               <Button 
-                type="primary" 
                 size="large"
                 onClick={() => setIsKeyboardDrawerOpen(isKeyboardDrawerOpen ? false: true)}
               >

@@ -65,7 +65,7 @@ root.render(
               colorPrimaryBorder: '#adc6ff',      // Light blue border
               colorPrimaryBorderHover: '#85a5ff', // Medium blue border hover
               colorPrimaryHover: '#1e3a5c',       // Darker blue for hover
-              colorPrimaryActive: '#102a4e',      // Even darker for active states
+              colorPrimaryActive: '#2B3E4F',      // Even darker for active states
               colorPrimaryTextHover: '#1e3a5c',   // Text hover
               colorPrimaryText: '#315877',        // Primary text
               colorPrimaryTextActive: '#102a4e',  // Primary text active
@@ -125,8 +125,8 @@ root.render(
               Select: {
                 colorBgContainer: '#315877',
                 colorBorder: '#d9d9d9',
-                optionSelectedBg: 'rgba(49, 88, 119, 0.08)',
-                optionActiveBg: 'rgba(49, 88, 119, 0.04)',
+                optionSelectedBg: '#2B3E4F',
+                optionActiveBg: '#2B3E4F',
                 algorithm: true,
               },
               
@@ -152,8 +152,8 @@ root.render(
                 algorithm: true,
               },
               Tabs: {
-                itemSelectedColor: '#25313B',                
-                colorPrimaryActive: '#25313B',                
+                itemSelectedColor: '#E8A889',                
+                colorPrimaryActive: '#E8A889',                
               }
             },
           }}

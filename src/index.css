@@ -21,7 +21,20 @@ code {
     monospace;
 }
 
-
 .ant-tree {
   background-color: rgba(255, 255, 255, 0)
+}
+
+.ant-btn {
+  border-radius: 2rem;
+  box-shadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)';
+  font-size: 1.1rem;
+}
+
+.ant-tabs .ant-tabs-ink-bar {
+  background: #E8A889;
+}
+
+.ant-tabs .ant-tabs-tab-btn {
+  font-size: 1.2rem;
 }
