@@ -74,7 +74,7 @@ root.render(
               fontSize: 14,
               
               // Border Radius
-              borderRadius: 6,
+              borderRadius: '2rem',
               
               // Size
               sizeStep: 4,
