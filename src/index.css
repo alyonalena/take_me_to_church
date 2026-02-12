@@ -42,3 +42,11 @@ code {
 .ant-tabs .ant-tabs-tab-btn {
   font-size: 1.2rem;
 }
+
+.ant-image-preview-wrap {
+  z-index: 1005 !important;
+}
+
+.ant-image-preview-mask {
+  background-color: rgba(0, 0, 0, 0.9);
+}

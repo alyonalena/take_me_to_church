@@ -1,5 +1,5 @@
 import './App.css'
-import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs, Carousel } from 'antd'
+import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs, Carousel, List, Avatar, Image } from 'antd'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { FileImageOutlined } from '@ant-design/icons'
@@ -7,6 +7,8 @@ import { FileImageOutlined } from '@ant-design/icons'
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 import BackgroundImg from '../src/img/background.png'
+import pargolovo1 from '../src/img/pargolovo1.jpg'
+import pargolovo2 from '../src/img/pargolovo2.jpg'
 
 const contentStyle = {
   margin: 0,
@@ -73,6 +75,7 @@ function App() {
 
 
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isPictureModalVisible, setIsPictureModalVisible] = useState(false)
   const [selectedPersonId, setSelectedPersonId] = useState(null)
   const [isKeyboardDrawerOpen, setIsKeyboardDrawerOpen] = useState(false)
   const keyboard = useRef(null)
@@ -114,6 +117,14 @@ function App() {
   const showModal = () => {
     setIsModalVisible(true)
   };
+
+  const showPicture = () => {
+    setIsPictureModalVisible(true)
+  }
+
+  const closePicture = () => {
+    setIsPictureModalVisible(false)
+  }
 
   const handleOk = () => {
     setIsModalVisible(false)
@@ -244,25 +255,29 @@ function App() {
       title: 'Документ 1',
       id: 1,
       key: 1,
-      icon: <FileImageOutlined />
+      icon: pargolovo1,
+      descripton: 'Описание'
     },
     {
       title: 'Документ 2',
       id: 2,
       key: 2,
-      icon: <FileImageOutlined />
+      icon: pargolovo2,
+      descripton: 'Описание'
     },
     {
       title: 'Документ 3',
       id: 3,
       key: 3,
-      icon: <FileImageOutlined />
+      icon: pargolovo1,
+      descripton: 'Описание'
     },
     {
       title: 'Документ 4',
       id: 4,
       key: 4,
-      icon: <FileImageOutlined />
+      icon: pargolovo2,
+      descripton: 'Описание'
     }
   ]
 
@@ -317,8 +332,7 @@ function App() {
   }
 
   const onArchivedDocTreeSelect = () => {
-    setShowPicMode(true)
-    showModal()
+    showPicture(true)
   }
 
   const onClear = () => {
@@ -363,7 +377,8 @@ function App() {
                 style={{ 
                   color: '#E7E7E7',
                   fontFamily: "'circle-contrast_medium', sans-serif",
-                  fontWeight: 500
+                  fontWeight: 500,
+                  fontSize: '2.2rem'
                 }}
               >Добро пожаловать в Спассо-Парголовский Храм</Typography.Title>                
             </header>
@@ -498,17 +513,29 @@ function App() {
                                   {isLoading ? (
                                       <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
                                   ) : (
-                                      <Tree
-                                          style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
-                                          showLine
-                                          showIcon
-                                          blockNode
-                                          onExpand={onExpand}
-                                          expandedKeys={expandedKeys}
-                                          autoExpandParent={autoExpandParent}
-                                          treeData={treeDataDocs}
-                                          onSelect={onArchivedDocTreeSelect}
-                                      />
+                                      <>
+                                        <Image.PreviewGroup
+                                          preview={{
+                                            mask: { blur: true},
+                                            onChange: (current, prev) => {}
+                                          }}
+                                        > 
+                                        <div>
+                                          <Image
+                                            width={50}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          /> Документ 1
+                                        </div> <br/>        
+                                        <div>
+                                          <Image
+                                            width={50}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          /> Документ 2
+                                        </div>
+                                        </Image.PreviewGroup>
+                                      </>
                                   )}
                               </div>
                             )
@@ -537,6 +564,25 @@ function App() {
 
 
             </div>
+            <Modal
+                title=""
+                style={{ top: '5vh'}}
+                styles={{
+                  body: {
+                    height: '90vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden'
+                  }
+                }}
+                width={'100%'}
+                open={isPictureModalVisible}               
+
+                onCancel={closePicture}
+                cancelButtonProps={{ style: { display: 'none' } }} // Hides the Cancel button
+            >
+              <Image src={pargolovo1}/>
+            </Modal>
             <Modal
                 title=""
                 style={{ top: '5vh'}}
@@ -619,7 +665,6 @@ function App() {
                             <Tree
                                 style={{ color: 'black' }}
                                 showLine
-                                showIcon
                                 blockNode
                                 onExpand={onExpand}
                                 expandedKeys={expandedKeys}
@@ -650,7 +695,8 @@ function App() {
               transform: 'translateX(-50%)', 
               zIndex: 1001
             }}>
-              <Button 
+              <Button
+                style={{boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)'}}
                 size="large"
                 onClick={() => setIsKeyboardDrawerOpen(isKeyboardDrawerOpen ? false: true)}
               >
