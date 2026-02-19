@@ -74,7 +74,7 @@ body,
 }
 
 .Tree-wrapper {
-  flex: 1;
+  height: '100%';
   overflow-y: auto;
   padding-right: 8px;
 }

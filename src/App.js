@@ -9,6 +9,7 @@ import "react-simple-keyboard/build/css/index.css"
 import BackgroundImg from '../src/img/background.png'
 import pargolovo1 from '../src/img/pargolovo1.jpg'
 import pargolovo2 from '../src/img/pargolovo2.jpg'
+import image from '../src/img/image.jpg'
 
 const contentStyle = {
   margin: 0,
@@ -331,9 +332,6 @@ function App() {
     setShowPicMode(true)
   }
 
-  const onArchivedDocTreeSelect = () => {
-    showPicture(true)
-  }
 
   const onClear = () => {
     setSearchValue('')
@@ -344,7 +342,7 @@ function App() {
     }
   }
 
-               
+
   const getImage = () => {
     let Img 
     if (personData.photos && personData.photos.length > 0) {
@@ -373,14 +371,14 @@ function App() {
         <div className="App-content" style={{ backgroundImage: `url(${BackgroundImg})`, backgroundColor: '#445B6D', backgroundSize: 'auto 100vh', backgroundPosition: 'top right', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
             <header className="App-header">
               <Typography.Title 
-                level={2} 
+                level={1} 
                 style={{ 
                   color: '#E7E7E7',
                   fontFamily: "'circle-contrast_medium', sans-serif",
                   fontWeight: 500,
                   fontSize: '2.2rem'
                 }}
-              >Добро пожаловать в Спассо-Парголовский Храм</Typography.Title>                
+              >Добро пожаловать в Спасо-Парголовский Храм</Typography.Title>                
             </header>
             <div className="App-main">
                 <div className="Search-bar">
@@ -426,48 +424,74 @@ function App() {
                         fontWeight: 500
                       }}
                     >Биографии</Typography.Title>
-                    <Tabs                    
-                      style={{width: '100%', overflow: 'hidden'}}
-                      defaultActiveKey="1" 
-                      tabPosition="left"
-                      items={[
-                        {
-                          key: '1',
-                          label: 'Настоятели',
-                          children: (
-                            <div className="Tree-wrapper" style={{  overflow: 'auto' }}>
-                                {isLoading ? (
-                                  <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
-                                ) : (
-                                  <Tree
-                                      style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
-                                      showLine
-                                      blockNode
-                                      onExpand={onExpand}
-                                      expandedKeys={expandedKeys}
-                                      autoExpandParent={autoExpandParent}
-                                      treeData={treeData[0]?.children || []}
-                                      onSelect={onTreeSelect}
-                                  />
-                                )}
+                    <div style={{ width: '100%', overflowY: 'hidden', display: 'flex' }}>
+                      <Tabs
+                        style={{ height: '100%', width: '25%' }}
+                        defaultActiveKey="1" 
+                        tabPosition="left"
+                        items={[
+                          {
+                            key: '1',
+                            label: 'Настоятели'
+                          },
+                          {
+                            key: '2',
+                            label: 'Клир'
+                          },
+                          {
+                            key: '3',
+                            label: 'Именитые прихожане'
+                          },
+                        ]} 
+                        onChange={(key) => console.log(key)} 
+                      />       
+                      <div className="Tree-wrapper" style={{ width: '75%'}}>
+                        <div >
+                            { isLoading ? (
+                                <Spin 
+                                    size="large" 
+                                    style={{ 
+                                        display: 'flex', 
+                                        justifyContent: 'center', 
+                                        alignItems: 'center', 
+                                        minHeight: '200px' 
+                                    }} 
+                                />
+                            ) : (
+                              <>
+                                <Tree
+                                    style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+                                    showLine
+                                    blockNode
+                                    onExpand={onExpand}
+                                    expandedKeys={expandedKeys}
+                                    autoExpandParent={autoExpandParent}
+                                    treeData={treeData[0]?.children || []}
+                                    onSelect={onTreeSelect}
+                                />{
+                                  /*
+                                  <List
+                                  itemLayout="horizontal"
+                                  dataSource={treeData[0]?.children || []}
+                                  renderItem={(item) => (
+                                    <List.Item
+                                      onClick={() => {}}
+                                    >
+                                    <List.Item.Meta
+                                        avatar={null}
+                                        title={item.title}
+                                      />
+                                    </List.Item>
+                                  )}
+                                />
+                                  */
+                                }
+                              </>
+                            )}
                             </div>
-                          )
-                        },
-                        {
-                          key: '2',
-                          label: 'Клир',
-                          children: <p>Контент второй вкладки</p>,
-                        },
-                        {
-                          key: '3',
-                          label: 'Именитые прихожане',
-                          children: <p>Контент третьей вкладки</p>,
-                        },
-                      ]} 
-                      onChange={(key) => console.log(key)} 
-                    />                      
+                        </div>           
                   </div>
-
+                  </div>
                   <div
                     onClick={handleClickTwo}
                     style={{
@@ -500,16 +524,29 @@ function App() {
                         fontWeight: 500
                       }}
                     >Архив фотографий и документов</Typography.Title>
+                    <div style={{ width: '100%', overflowY: 'hidden', display: 'flex' }}>
                       <Tabs
-                        style={{width: '100%', overflow: 'hidden'}}
+                        style={{ height: '100%', width: '25%' }}
                         tabPosition="left"
                         defaultActiveKey="1" 
                         items={[
                           {
                             key: '1',
                             label: 'Парголово XIX - н.XX вв.',
-                            children:  (
-                              <div className="Tree-wrapper">
+                          },
+                          {
+                            key: '2',
+                            label: 'Жизнь Храма',
+                          },
+                          {
+                            key: '3',
+                            label: 'Интересные документы',
+                          },
+                        ]} 
+                        onChange={(key) => console.log(key)} 
+                      />
+                      <div className='Tree-wrapper' style={{ width: '75%'}}>
+                              <div>
                                   {isLoading ? (
                                       <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
                                   ) : (
@@ -519,50 +556,255 @@ function App() {
                                             mask: { blur: true},
                                             onChange: (current, prev) => {}
                                           }}
-                                        > 
-                                        <div>
-                                          <Image
-                                            width={50}
+                                        >
+                                         <Image
+                                          style={{padding: 8}}
+                                            height={100}
                                             alt="svg image"
                                             src={pargolovo1}
-                                          /> Документ 1
-                                        </div> <br/>        
-                                        <div>
+                                          />
                                           <Image
-                                            width={50}
+                                          style={{padding: 8}}
+                                            height={100}
                                             alt="svg image"
                                             src={pargolovo2}
-                                          /> Документ 2
-                                        </div>
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo1}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={image}
+                                          />
+                                          <Image
+                                          style={{padding: 8}}
+                                            height={100}
+                                            alt="svg image"
+                                            src={pargolovo2}
+                                          />
                                         </Image.PreviewGroup>
                                       </>
                                   )}
-                              </div>
-                            )
-                          },
-                          {
-                            key: '2',
-                            label: 'Жизнь Храма',
-                            children: (
-                              <div style={{minHeight: '100%', border: '1px solid red'}}>
-                                Контент второй вкладки
-                              </div>
-                            ),
-                          },
-                          {
-                            key: '3',
-                            label: 'Интересные документы',
-                            children: <p>Контент третьей вкладки</p>,
-                          },
-                        ]} 
-                        onChange={(key) => console.log(key)} 
-                      />
+                          </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                
-
-
-
+                </div> 
             </div>
             <Modal
                 title=""
@@ -576,8 +818,7 @@ function App() {
                   }
                 }}
                 width={'100%'}
-                open={isPictureModalVisible}               
-
+                open={isPictureModalVisible}
                 onCancel={closePicture}
                 cancelButtonProps={{ style: { display: 'none' } }} // Hides the Cancel button
             >
@@ -688,44 +929,48 @@ function App() {
                   </>
                 ) : null}
             </Modal>
-            <div style={{ 
-              position: 'fixed', 
-              bottom: 20, 
-              left: '50%', 
-              transform: 'translateX(-50%)', 
-              zIndex: 1001
-            }}>
-              <Button
-                style={{boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)'}}
-                size="large"
-                onClick={() => setIsKeyboardDrawerOpen(isKeyboardDrawerOpen ? false: true)}
-              >
-                { isKeyboardDrawerOpen ? "Скрыть клавиатуру" : "Открыть клавиатуру" }
-              </Button>
-            </div>
-            <Drawer
-                placement="bottom"
-                height={350}
-                open={isKeyboardDrawerOpen}
-                onClose={() => {
-                  setIsKeyboardDrawerOpen(false)
-                  if (keyboard.current) {
-                    keyboard.current.clearInput()
-                  }
-                }}
-                closable={false}
-                mask={false}
-            >
-                <Keyboard
-                  layout={russianLayout}
-                  style={{color: 'black'}}
-                  keyboardRef={(r) => (keyboard.current = r)} 
-                  layoutName={layout}
-                  onChange={onChange}
-                  onKeyPress={onKeyPress}
-                />
-                <br/>
-            </Drawer>
+            { isFirstOnTop && (
+              <>
+                <div style={{ 
+                  position: 'fixed', 
+                  bottom: 20, 
+                  left: '50%', 
+                  transform: 'translateX(-50%)', 
+                  zIndex: 1001
+                }}>
+                  <Button
+                    style={{boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)'}}
+                    size="large"
+                    onClick={() => setIsKeyboardDrawerOpen(isKeyboardDrawerOpen ? false: true)}
+                  >
+                    { isKeyboardDrawerOpen ? "Скрыть клавиатуру" : "Открыть клавиатуру" }
+                  </Button>
+                </div>
+                <Drawer
+                    placement="bottom"
+                    height={350}
+                    open={isKeyboardDrawerOpen}
+                    onClose={() => {
+                      setIsKeyboardDrawerOpen(false)
+                      if (keyboard.current) {
+                        keyboard.current.clearInput()
+                      }
+                    }}
+                    closable={false}
+                    mask={false}
+                >
+                    <Keyboard
+                      layout={russianLayout}
+                      style={{color: 'black'}}
+                      keyboardRef={(r) => (keyboard.current = r)} 
+                      layoutName={layout}
+                      onChange={onChange}
+                      onKeyPress={onKeyPress}
+                    />
+                    <br/>
+                </Drawer>
+              </>
+            )}
         </div>
     )
 }

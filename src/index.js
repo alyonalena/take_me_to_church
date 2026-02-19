@@ -22,7 +22,6 @@ root.render(
       <QueryClientProvider client={queryClient}>
       <ConfigProvider 
           theme={{
-            algorithm: theme.darkAlgorithm,
             token: {
               // Primary Colors - Blue palette
               colorPrimary: '#315877',           // Your main color as primary
@@ -69,7 +68,7 @@ root.render(
               colorPrimaryTextHover: '#1e3a5c',   // Text hover
               colorPrimaryText: '#315877',        // Primary text
               colorPrimaryTextActive: '#102a4e',  // Primary text active
-              
+
               // Font
               fontSize: 14,
               
