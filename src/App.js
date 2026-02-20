@@ -1,15 +1,16 @@
 import './App.css'
-import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs, Carousel, List, Avatar, Image } from 'antd'
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { Input, Tree, Modal, Typography, Flex, Spin, Drawer, Button, Tabs, Space, Image } from 'antd'
+import { useState, useMemo, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { FileImageOutlined } from '@ant-design/icons'
+import {
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons'
 
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 import BackgroundImg from '../src/img/background.png'
-import pargolovo1 from '../src/img/pargolovo1.jpg'
-import pargolovo2 from '../src/img/pargolovo2.jpg'
-import image from '../src/img/image.jpg'
 
 
 const apiURL = 'https://severely-superior-monster.cloudpub.ru/api/'
@@ -317,12 +318,34 @@ function App() {
     const getArchivePhotoCollection = () => {
 
       const imageList = archiveDataSource?.find(({name}) => name == archiveGroup[archiveActiveTab])?.photos || []
+      const max = imageList.length
 
       return (
         <>
-          <Image.PreviewGroup
+          <Image.PreviewGroup          
             preview={{
+              actionsRender: (
+                _,
+                {
+                  transform: { scale },
+                  actions: {
+                    onZoomOut,
+                    onZoomIn,
+                  },
+                },
+              ) => (
+                <Space size={12} className="toolbar-wrapper">
+                  <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                  <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                </Space>
+              ),
               mask: { blur: true},
+              countRender: (current) => (
+                <>
+                  <>{`${current} / ${max}`}</><br/><br/>
+                  <b style={{ fontSize: '1.1rem'}}>{imageList[current - 1].title}</b>
+                </>
+              ),
               onChange: (current, prev) => {}
             }}
           >
@@ -505,6 +528,68 @@ function App() {
     }
 
     const getPersonDetails = () => {
+
+      const getPersonPhotos = () => {
+
+        if (isPersonLoading) {
+          return null
+        }
+
+        const photos = personData?.photos?.filter(({is_main}) => !is_main) || []
+
+        if (photos.length > 0) {
+
+          const max = photos.length
+
+          return (
+            <>
+              <Typography.Title level={5} style={{ color: '#1B3041'}}>
+                Архив фотографий и документов:
+              </Typography.Title>
+              <div>
+                <Image.PreviewGroup
+                  preview={{
+                    actionsRender: (
+                      _,
+                      {
+                        transform: { scale },
+                        actions: {
+                          onZoomOut,
+                          onZoomIn,
+                        },
+                      },
+                    ) => (
+                      <Space size={12} className="toolbar-wrapper">
+                        <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                        <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                      </Space>
+                    ),
+                    mask: { blur: true},
+                    countRender: (current) => (
+                      <>
+                        <>{`${current} / ${max}`}</><br/><br/>
+                        <b style={{ fontSize: '1.1rem'}}>{photos[current - 1].caption}</b>
+                      </>
+                    ),
+                  }}
+                >
+                  { photos.map(image => (
+                    <Image
+                      style={{padding: 8}}
+                        height={100}
+                        alt={image.caption}
+                        src={`${mediaURL}${image.photo_url}`}
+                      />
+                  ))}
+                </Image.PreviewGroup>
+              </div>
+            </>
+          )
+        }
+
+        return null                      
+      }
+
       return (      
         <Modal
             title=""
@@ -557,42 +642,7 @@ function App() {
                               : ''}
                           </Typography.Title>
                         )}
-                        <Typography.Title level={5} style={{ color: '#1B3041'}}>
-                          Архив фотографий и документов:
-                        </Typography.Title>
-                        <div>
-                          <Image.PreviewGroup
-                            preview={{
-                              mask: { blur: true},
-                              onChange: (current, prev) => {}
-                            }}
-                          >
-                              <Image
-                                style={{padding: 8}}
-                                height={100}
-                                alt="svg image"
-                                src={pargolovo1}
-                              />
-                              <Image
-                                style={{padding: 8}}
-                                height={100}
-                                alt="svg image"
-                                src={pargolovo2}
-                              />
-                              <Image
-                                style={{padding: 8}}
-                                height={100}
-                                alt="svg image"
-                                src={image}
-                              />
-                              <Image
-                                style={{padding: 8}}
-                                height={100}
-                                alt="svg image"
-                                src={pargolovo1}
-                              />
-                          </Image.PreviewGroup>
-                        </div>                            
+                        { getPersonPhotos() }
                     </Flex>
                 </Flex>
                 <div className='modal-content'>

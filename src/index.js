@@ -136,7 +136,8 @@ root.render(
                 headerBg: '#ECECEC',
                 footerBg: '#ECECEC',
                 algorithm: true,
-                zIndexPopupBase: 1002
+                zIndexPopupBase: 1002,
+                borderRadius: '0.3rem',
               },
               Drawer: {
                 algorithm: true,
