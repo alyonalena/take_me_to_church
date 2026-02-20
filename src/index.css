@@ -51,13 +51,6 @@ code {
   background-color: rgba(0, 0, 0, 0.9);
 }
 
-image-0image-1
-Custom toolbar render
-You can customize the toolbar and add a button for downloading the original image or downloading the flipped and rotated image.
-
-TypeScript
-JavaScript
-CSS
 
 .toolbar-wrapper {
   padding: 0px 24px;
