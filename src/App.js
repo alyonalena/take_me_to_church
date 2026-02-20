@@ -13,12 +13,19 @@ import image from '../src/img/image.jpg'
 
 
 const apiURL = 'https://severely-superior-monster.cloudpub.ru/api/'
+const mediaURL = 'https://severely-superior-monster.cloudpub.ru/'
 const apiURLProd = 'https://dq94-qj2m-e53n.gw-1a.dockhost.net/api'
 
 const peopleGroup = {
   NS: 'Настоятели',
   PR: 'Именитые прихожане',
   KL: 'Клирики',  
+}
+
+const archiveGroup = {
+  PARG: 'Парголово 19-20 вв.',
+  INT: 'Интересные документы',
+  LIFE: 'Жизнь Храма',
 }
 
 const getParentKey = (key, tree) => {
@@ -46,8 +53,28 @@ function App() {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedPersonId, setSelectedPersonId] = useState(null)
   const [isKeyboardDrawerOpen, setIsKeyboardDrawerOpen] = useState(false)
-  const [peopleActiveTab, setPeopleActiveTab] = useState(peopleGroup.NS)
+  const [peopleActiveTab, setPeopleActiveTab] = useState('NS')
+  const [archiveActiveTab, setArchiveActiveTab] = useState('PARG')
+
   const keyboard = useRef(null)
+
+  const { data: archiveDataSource, isLoadingArchive } = useQuery({
+    queryKey: ['archive'],
+    queryFn: async () => {
+      const response = await fetch(`${apiURL}archive/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    },
+  })
+
+  console.info(archiveDataSource)
 
   const { data: dataSource, isLoading } = useQuery({
     queryKey: ['groups'],
@@ -287,21 +314,46 @@ function App() {
       ) : null
     }
 
+    const getArchivePhotoCollection = () => {
+
+      const imageList = archiveDataSource?.find(({name}) => name == archiveGroup[archiveActiveTab])?.photos || []
+
+      return (
+        <>
+          <Image.PreviewGroup
+            preview={{
+              mask: { blur: true},
+              onChange: (current, prev) => {}
+            }}
+          >
+            { imageList.map(image => (
+              <Image
+                style={{padding: 8}}
+                  height={100}
+                  alt={image.title}
+                  src={`${mediaURL}${image.image}`}
+                />
+            ))}
+          </Image.PreviewGroup>
+        </>
+      ) 
+    }
+
     const getPeopleBlock = () => {
-      
+
       const getPeopleTree = () => {
-      const tabTreeData = treeData?.find(({title}) => title == peopleGroup[peopleActiveTab])?.children || []
-          return (
-            <Tree
-                style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
-                showLine
-                blockNode
-                onExpand={onExpand}
-                expandedKeys={expandedKeys}
-                autoExpandParent={autoExpandParent}
-                treeData={tabTreeData}
-                onSelect={onTreeSelect}
-            />
+        const tabTreeData = treeData?.find(({title}) => title == peopleGroup[peopleActiveTab])?.children || []
+        return (
+          <Tree
+              style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+              showLine
+              blockNode
+              onExpand={onExpand}
+              expandedKeys={expandedKeys}
+              autoExpandParent={autoExpandParent}
+              treeData={tabTreeData}
+              onSelect={onTreeSelect}
+          />
         )
       }
 
@@ -325,7 +377,7 @@ function App() {
               width: '90%',
               height: '90%',
               boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)',
-              transform: isFirstOnTop ? "translateX(0) translateY(70px)" : "translateX(70px) translateY(0)",
+              transform: isFirstOnTop ? "translateX(0) translateY(90px)" : "translateX(90px) translateY(0)",
               transition: "transform 0.5s ease, opacity 0.5s ease",
               padding: '0 20px'
             }}
@@ -335,7 +387,8 @@ function App() {
               style={{ 
                 color: '#E7E7E7',
                 fontFamily: "'circle-contrast_medium', sans-serif",
-                fontWeight: 500
+                fontWeight: 500,
+                padding: '10px 20px 20px'
               }}
             >
                 Биографии
@@ -384,316 +437,69 @@ function App() {
     const getPhotosBlock = () => {
       return (
         <div
-                      onClick={handleClickTwo}
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "#1A2C3A",
-                        border: '1px solid rgb(5, 12, 18, 0.6)',
-                        borderRadius: '0.3rem',
-                        color: "#E7E7E7",
-                        display: "flex",
-                        alignItems: "flex-start",
-                        justifyContent: "flex-start",
-                        flexDirection: "column",
-                        cursor: "pointer",
-                        width: '90%',
-                        zIndex: isFirstOnTop ? 1 : 2,                      
-                        opacity: isFirstOnTop ? 0.6 : 1,
-                        height: '90%',
-                        boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)',
-                        transform: isFirstOnTop ? "translateX(70px) translateY(0)" : "translateX(0) translateY(70px)",
-                        transition: "transform 0.5s ease, opacity 0.5s ease",
-                        padding: '0 20px'
-                      }}
-                    >
-                      <Typography.Title 
-                        level={2} 
-                        style={{ 
-                          color: '#E7E7E7',
-                          fontFamily: "'circle-contrast_medium', sans-serif",
-                          fontWeight: 500
-                        }}
-                      >Архив фотографий и документов</Typography.Title>
-                      <div style={{ width: '100%', overflowY: 'hidden', display: 'flex' }}>
-                        <Tabs
-                          style={{ height: '100%', width: '25%' }}
-                          tabPosition="left"
-                          defaultActiveKey="1" 
-                          items={[
-                            {
-                              key: '1',
-                              label: 'Парголово XIX - н.XX вв.',
-                            },
-                            {
-                              key: '2',
-                              label: 'Жизнь Храма',
-                            },
-                            {
-                              key: '3',
-                              label: 'Интересные документы',
-                            },
-                          ]} 
-                          onChange={(key) => console.log(key)} 
-                        />
-                        <div className='Tree-wrapper' style={{ width: '75%'}}>
-                                <div>
-                                    {isLoading ? (
-                                        <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
-                                    ) : (
-                                        <>
-                                          <Image.PreviewGroup
-                                            preview={{
-                                              mask: { blur: true},
-                                              onChange: (current, prev) => {}
-                                            }}
-                                          >
-                                          <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo1}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={image}
-                                            />
-                                            <Image
-                                            style={{padding: 8}}
-                                              height={100}
-                                              alt="svg image"
-                                              src={pargolovo2}
-                                            />
-                                          </Image.PreviewGroup>
-                                        </>
-                                    )}
-                            </div>
-                        </div>
-                      </div>
+          onClick={handleClickTwo}
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "#1A2C3A",
+            border: '1px solid rgb(5, 12, 18, 0.6)',
+            borderRadius: '0.3rem',
+            color: "#E7E7E7",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            flexDirection: "column",
+            cursor: "pointer",
+            width: '90%',
+            zIndex: isFirstOnTop ? 1 : 2,                      
+            opacity: isFirstOnTop ? 0.6 : 1,
+            height: '90%',
+            boxShadow: '4px 4px 4px 0px rgb(5, 12, 18, 0.7)',
+            transform: isFirstOnTop ? "translateX(90px) translateY(0)" : "translateX(0) translateY(90px)",
+            transition: "transform 0.5s ease, opacity 0.5s ease",
+            padding: '0 20px'
+          }}
+        >
+          <Typography.Title 
+            level={2} 
+            style={{ 
+              color: '#E7E7E7',
+              fontFamily: "'circle-contrast_medium', sans-serif",
+              fontWeight: 500,
+              padding: '10px 20px 20px'
+            }}
+          >
+              Архив фотографий и документов
+          </Typography.Title>
+          <div style={{ width: '100%', overflowY: 'hidden', display: 'flex' }}>
+            <Tabs
+              style={{ height: '100%', width: '25%' }}
+              tabPosition="left"
+              defaultActiveKey="1" 
+              items={[
+                {
+                  key: 'PARG',
+                  label: 'Парголово XIX - н.XX вв.',
+                },
+                {
+                  key: 'LIFE',
+                  label: 'Жизнь Храма',
+                },
+                {
+                  key: 'INT',
+                  label: 'Интересные документы',
+                },
+              ]} 
+              onChange={(key) => setArchiveActiveTab(key)} 
+            />
+            <div className='Tree-wrapper' style={{ width: '75%'}}>
+                <div>
+                    { isLoadingArchive ? (
+                        <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
+                    ) : getArchivePhotoCollection() }
+                </div>
+            </div>
+          </div>
         </div>
       ) 
     }
@@ -881,7 +687,7 @@ function App() {
             </header>
             <div className="App-main">
                 { getSearchBar()}              
-                <div style={{ position: "relative", width: '90%', height: '90vh', margin: '50px' }}>
+                <div style={{ position: "relative", width: '90%', height: '90vh', margin: ' 20px 50px 50px' }}>
                   { getPeopleBlock() }
                   { getPhotosBlock() }
                 </div> 
