@@ -341,10 +341,10 @@ function App() {
               ),
               mask: { blur: true},
               countRender: (current) => (
-                <>
-                  <>{`${current} / ${max}`}</><br/><br/>
-                  <b style={{ fontSize: '1.1rem'}}>{imageList[current - 1].title}</b>
-                </>
+                  <div className="toolbar-image">
+                    <>{`${current} / ${max}`}</><br/>
+                    <div className="text">{imageList[current - 1].title}</div>
+                  </div>
               ),
               onChange: (current, prev) => {}
             }}
@@ -566,10 +566,10 @@ function App() {
                     ),
                     mask: { blur: true},
                     countRender: (current) => (
-                      <>
+                      <div className="toolbar-image">
                         <>{`${current} / ${max}`}</><br/><br/>
-                        <b style={{ fontSize: '1.1rem'}}>{photos[current - 1].caption}</b>
-                      </>
+                        <div className="text">{photos[current - 1].caption}</div>
+                      </div>
                     ),
                   }}
                 >

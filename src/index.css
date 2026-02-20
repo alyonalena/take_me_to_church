@@ -73,3 +73,19 @@ code {
 .toolbar-wrapper .anticon:hover {
   opacity: 0.3;
 }
+
+
+.toolbar-image {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 16px;
+  margin: 8px;
+  border-radius: 0.3rem;
+  .text {
+    font-size: 1rem;
+    color: white;
+  }
+}
+
+.ant-image-preview-img {
+  transform: translate3d(0px, 0px, 0px) scale3d(1.3, 1.3, 1.3) rotate(0deg) !important;
+}
