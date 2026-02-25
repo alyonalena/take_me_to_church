@@ -11,11 +11,12 @@ import {
 import Keyboard from "react-simple-keyboard"
 import "react-simple-keyboard/build/css/index.css"
 import BackgroundImg from '../src/img/background.png'
-
+import test from '../src/img/pargolovo1.jpg'
 
 const apiURL = 'https://severely-superior-monster.cloudpub.ru/api/'
 const mediaURL = 'https://severely-superior-monster.cloudpub.ru/'
-const apiURLProd = 'https://dq94-qj2m-e53n.gw-1a.dockhost.net/api'
+const apiURLProd = 'https://dq94-qj2m-e53n.gw-1a.dockhost.net/api/'
+const apiMediaURLProd = 'https://dq94-qj2m-e53n.gw-1a.dockhost.net/'
 
 const peopleGroup = {
   NS: 'Настоятели',
@@ -62,7 +63,7 @@ function App() {
   const { data: archiveDataSource, isLoadingArchive } = useQuery({
     queryKey: ['archive'],
     queryFn: async () => {
-      const response = await fetch(`${apiURL}archive/`, {
+      const response = await fetch(`${apiURLProd}archive/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ function App() {
   const { data: dataSource, isLoading } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
-      const response = await fetch(`${apiURL}groups/`, {
+      const response = await fetch(`${apiURLProd}groups/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +98,7 @@ function App() {
     queryKey: ['person', selectedPersonId],
     queryFn: async () => {
       if (!selectedPersonId) return null
-      const response = await fetch(`${apiURL}people/${selectedPersonId}/`, {
+      const response = await fetch(`${apiURLProd}people/${selectedPersonId}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -322,7 +323,7 @@ function App() {
 
       return (
         <>
-          <Image.PreviewGroup          
+          <Image.PreviewGroup
             preview={{
               actionsRender: (
                 _,
@@ -349,15 +350,57 @@ function App() {
               onChange: (current, prev) => {}
             }}
           >
-            { imageList.map(image => (
-              <Image
-                style={{padding: 8}}
-                  height={100}
-                  alt={image.title}
-                  src={`${mediaURL}${image.image}`}
-                />
+            <div
+              style={{ 
+                display: 'flex', 
+                fontSize: '0.9rem',
+                display: 'flex',
+                flexWrap: 'wrap',
+              }}
+            >
+            { imageList.map(image => (              
+                <div 
+                  style={{
+                    margin: '4px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                  }}>
+                    <div 
+                      style={{ 
+                        width: 'auto',
+                        margin: '4px',
+                        background: 'rgba(0, 0, 0, 0.2)', 
+                        display: 'flex', 
+                        border: '1px solid black',
+                      }}
+                    >
+                       <div 
+                        style={{
+                          padding: '8px',
+                          minWidth: '100px',
+                          flex: "auto"
+                        }}
+                      >
+                        <Image
+                            height={100}
+                            alt={image.title}
+                            src={`${apiMediaURLProd}${image.image}`}
+                        />
+                      </div>
+                      <div 
+                        style={{
+                          padding: '8px',
+                          maxWidth: '200px',
+                          flex: "auto"
+                        }}
+                      >
+                        {image.title}
+                      </div>
+                    </div>
+                </div>
             ))}
-          </Image.PreviewGroup>
+            </div>
+          </Image.PreviewGroup>          
         </>
       ) 
     }
@@ -418,7 +461,7 @@ function App() {
             </Typography.Title>
             <div style={{ width: '100%', overflowY: 'hidden', display: 'flex' }}>
               <Tabs
-                style={{ height: '100%', width: '25%' }}
+                style={{ height: '100%', width: '260px' }}
                 defaultActiveKey="1" 
                 tabPosition="left"
                 items={[
@@ -437,7 +480,7 @@ function App() {
                 ]} 
                 onChange={(key) => setPeopleActiveTab(key)} 
               />     
-              <div className="Tree-wrapper" style={{ width: '75%'}}>
+              <div className="Tree-wrapper" style={{ flexGrow: 1}}>
                 <div >
                     { isLoading ? (
                         <Spin 
@@ -496,7 +539,7 @@ function App() {
           </Typography.Title>
           <div style={{ width: '100%', overflowY: 'hidden', display: 'flex' }}>
             <Tabs
-              style={{ height: '100%', width: '25%' }}
+              style={{ height: '100%', width: '260px' }}
               tabPosition="left"
               defaultActiveKey="1" 
               items={[
@@ -515,7 +558,7 @@ function App() {
               ]} 
               onChange={(key) => setArchiveActiveTab(key)} 
             />
-            <div className='Tree-wrapper' style={{ width: '75%'}}>
+            <div className='Tree-wrapper' style={{ flexGrow: 1}}>
                 <div>
                     { isLoadingArchive ? (
                         <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }} />
@@ -561,7 +604,7 @@ function App() {
                     ) => (
                       <Space size={12} className="toolbar-wrapper">
                         <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
-                        <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+                        <ZoomInOutlined disabled={scale === 150} onClick={onZoomIn} />
                       </Space>
                     ),
                     mask: { blur: true},
@@ -578,7 +621,7 @@ function App() {
                       style={{padding: 8}}
                         height={100}
                         alt={image.caption}
-                        src={`${mediaURL}${image.photo_url}`}
+                        src={`${apiMediaURLProd}${image.photo_url}`}
                       />
                   ))}
                 </Image.PreviewGroup>
