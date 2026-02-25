@@ -394,7 +394,7 @@ function App() {
                           flex: "auto"
                         }}
                       >
-                        {image.title}
+                        {image.name}
                       </div>
                     </div>
                 </div>
