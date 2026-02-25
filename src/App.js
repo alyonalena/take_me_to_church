@@ -387,15 +387,17 @@ function App() {
                             src={`${apiMediaURLProd}${image.image}`}
                         />
                       </div>
-                      <div 
-                        style={{
-                          padding: '8px',
-                          maxWidth: '200px',
-                          flex: "auto"
-                        }}
-                      >
-                        {image.name}
-                      </div>
+                      { image.name && (
+                        <div 
+                          style={{
+                            padding: '8px',
+                            maxWidth: '200px',
+                            flex: "auto"
+                          }}
+                        >
+                          {image.name}
+                        </div>
+                      )}
                     </div>
                 </div>
             ))}
